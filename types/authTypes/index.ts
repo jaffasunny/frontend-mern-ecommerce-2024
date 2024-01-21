@@ -1,4 +1,4 @@
-export interface UserLoginResponse {
+export interface AuthResponse {
 	statusCode: string;
 	data: object;
 	message: string;
@@ -12,16 +12,45 @@ export interface AuthState {
 
 export interface AuthAction {
 	login: (
-		username: string,
+		emailOrUsername: string,
 		password: string
-	) => Promise<UserLoginResponse | string | void>;
+	) => Promise<AuthResponse | string | void>;
+	signup: (
+		firstName: string,
+		lastName: string,
+		username: string,
+		email: string,
+		password: string
+	) => Promise<AuthResponse | string | void>;
 	logout: () => void;
 }
 
 export interface LoginTypes {
-	HandleSubmitType: (event: React.FormEvent<Element>) => Promise<void>;
+	HandleSubmitType: (
+		emailOrUsername: string,
+		password: string
+	) => Promise<void>;
 	FormValueType: {
-		username: string;
+		emailOrUsername: string;
 		password: string;
+	};
+}
+
+export interface SignupTypes {
+	HandleSubmitType: (
+		firstName: string,
+		lastName: string,
+		username: string,
+		email: string,
+		password: string
+	) => Promise<void>;
+	FormValueType: {
+		firstName: string;
+		lastName: string;
+		username: string;
+		email: string;
+		password: string;
+		confirmPassword: string;
+		radioButton: boolean;
 	};
 }

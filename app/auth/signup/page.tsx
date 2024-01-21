@@ -1,11 +1,39 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import GoogleSvg from "@/public/icons/Google.svg";
 import Link from "next/link";
 import IconButton from "@/components/Button/IconButton";
+import TextLabelInput from "@/components/Inputs/TextLabelInput";
+import { SignupTypes } from "@/types";
+import TextLabelRadioInput from "@/components/Inputs/TextLabelRadioInput";
+import SimpleButton from "@/components/Button/SimpleButton";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
+import { Formik } from "formik";
+import { signupSchema } from "@/utils/validationSchema";
 
 type Props = {};
 
 const Signup = (props: Props) => {
+	const signupApi = useAuthStore((state) => state.signup);
+	const router = useRouter();
+
+	const handleSubmit: SignupTypes["HandleSubmitType"] = async (
+		firstName,
+		lastName,
+		username,
+		email,
+		password
+	) => {
+		try {
+			await signupApi(firstName, lastName, username, email, password);
+			router.replace("/");
+		} catch (error) {
+			console.log({ error });
+		}
+	};
+
 	return (
 		<div className='dark:bg-slate-900 bg-gray-100 flex min-h-screen h-full items-center'>
 			<main className='w-full max-w-md mx-auto'>
@@ -35,141 +63,126 @@ const Signup = (props: Props) => {
 								Or
 							</div>
 
-							<form>
-								<div className='grid gap-y-4'>
-									<div>
-										<label
-											htmlFor='email'
-											className='block text-sm mb-2 dark:text-white'>
-											Email address
-										</label>
-										<div className='relative'>
-											<input
-												type='email'
-												id='email'
-												name='email'
-												className='py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600'
-												required
-												aria-describedby='email-error'
-											/>
-											<div className='hidden absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3'>
-												<svg
-													className='h-5 w-5 text-red-500'
-													width='16'
-													height='16'
-													fill='currentColor'
-													viewBox='0 0 16 16'
-													aria-hidden='true'>
-													<path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z' />
-												</svg>
-											</div>
-										</div>
-										<p
-											className='hidden text-xs text-red-600 mt-2'
-											id='email-error'>
-											Please include a valid email address so we can get back to
-											you
-										</p>
-									</div>
-
-									<div>
-										<label
-											htmlFor='password'
-											className='block text-sm mb-2 dark:text-white'>
-											Password
-										</label>
-										<div className='relative'>
-											<input
-												type='password'
-												id='password'
-												name='password'
-												className='py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600'
-												required
-												aria-describedby='password-error'
-											/>
-											<div className='hidden absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3'>
-												<svg
-													className='h-5 w-5 text-red-500'
-													width='16'
-													height='16'
-													fill='currentColor'
-													viewBox='0 0 16 16'
-													aria-hidden='true'>
-													<path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z' />
-												</svg>
-											</div>
-										</div>
-										<p
-											className='hidden text-xs text-red-600 mt-2'
-											id='password-error'>
-											8+ characters required
-										</p>
-									</div>
-
-									<div>
-										<label
-											htmlFor='confirm-password'
-											className='block text-sm mb-2 dark:text-white'>
-											Confirm Password
-										</label>
-										<div className='relative'>
-											<input
-												type='password'
-												id='confirm-password'
-												name='confirm-password'
-												className='py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600'
-												required
-												aria-describedby='confirm-password-error'
-											/>
-											<div className='hidden absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3'>
-												<svg
-													className='h-5 w-5 text-red-500'
-													width='16'
-													height='16'
-													fill='currentColor'
-													viewBox='0 0 16 16'
-													aria-hidden='true'>
-													<path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z' />
-												</svg>
-											</div>
-										</div>
-										<p
-											className='hidden text-xs text-red-600 mt-2'
-											id='confirm-password-error'>
-											Password does not match the password
-										</p>
-									</div>
-
-									<div className='flex items-center'>
-										<div className='flex'>
-											<input
-												id='remember-me'
-												name='remember-me'
-												type='checkbox'
-												className='shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 pointer-events-none focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800'
-											/>
-										</div>
-										<div className='ms-3'>
-											<label
-												htmlFor='remember-me'
-												className='text-sm dark:text-white'>
-												I accept the{" "}
-												<a
-													className='text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'
-													href='#'>
-													Terms and Conditions
-												</a>
-											</label>
-										</div>
-									</div>
-
-									<button
-										type='submit'
-										className='w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'>
-										Sign up
-									</button>
-								</div>
-							</form>
+							<Formik
+								initialValues={
+									{
+										firstName: "",
+										lastName: "",
+										username: "",
+										email: "",
+										password: "",
+										confirmPassword: "",
+										radioButton: false,
+									} as SignupTypes["FormValueType"]
+								}
+								validationSchema={signupSchema}
+								onSubmit={(values, { setSubmitting }) => {
+									setTimeout(async () => {
+										setSubmitting(false);
+										await handleSubmit(
+											values.firstName,
+											values.lastName,
+											values.username,
+											values.email,
+											values.password
+										);
+									}, 400);
+								}}>
+								{({
+									values,
+									errors,
+									touched,
+									handleChange,
+									handleBlur,
+									handleSubmit,
+									isSubmitting,
+								}) => (
+									<form onSubmit={handleSubmit} className='grid gap-y-4'>
+										<TextLabelInput
+											name='firstName'
+											title='First Name'
+											onBlur={handleBlur}
+											value={values.firstName}
+											handleChange={handleChange}
+											errors={
+												errors.firstName &&
+												touched.firstName &&
+												errors.firstName
+											}
+										/>
+										<TextLabelInput
+											name='lastName'
+											title='Last Name'
+											onBlur={handleBlur}
+											value={values.lastName}
+											handleChange={handleChange}
+											errors={
+												errors.lastName && touched.lastName && errors.lastName
+											}
+										/>
+										<TextLabelInput
+											name='username'
+											title='Username'
+											onBlur={handleBlur}
+											value={values.username}
+											handleChange={handleChange}
+											errors={
+												errors.username && touched.username && errors.username
+											}
+										/>
+										<TextLabelInput
+											name='email'
+											title='Email'
+											onBlur={handleBlur}
+											value={values.email}
+											handleChange={handleChange}
+											errors={errors.email && touched.email && errors.email}
+										/>
+										<TextLabelInput
+											name='password'
+											title='Password'
+											inputType='password'
+											onBlur={handleBlur}
+											value={values.password}
+											handleChange={handleChange}
+											errors={
+												errors.password && touched.password && errors.password
+											}
+										/>
+										<TextLabelInput
+											name='confirmPassword'
+											title='Confirm Password'
+											inputType='password'
+											onBlur={handleBlur}
+											value={values.confirmPassword}
+											handleChange={handleChange}
+											errors={
+												errors.confirmPassword &&
+												touched.confirmPassword &&
+												errors.confirmPassword
+											}
+										/>
+										<TextLabelRadioInput
+											labelText={
+												<>
+													I accept the{" "}
+													<a
+														className='text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'
+														href='#'>
+														Terms and Conditions
+													</a>
+												</>
+											}
+											errors={errors.radioButton}
+										/>
+										<SimpleButton
+											type='submit'
+											title='Sign up'
+											disabled={isSubmitting}
+										/>
+									</form>
+								)}
+							</Formik>
 						</div>
 					</div>
 				</div>

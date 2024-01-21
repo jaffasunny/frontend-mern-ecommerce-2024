@@ -11,24 +11,19 @@ import TextLabelInput from "@/components/Inputs/TextLabelInput";
 import IconButton from "@/components/Button/IconButton";
 import TextLabelRadioInput from "@/components/Inputs/TextLabelRadioInput";
 import SimpleButton from "@/components/Button/SimpleButton";
+import { Formik } from "formik";
+import { loginSchema } from "@/utils/validationSchema";
 
 const Login = () => {
-	const [formValues, setFormValues] = useState<LoginTypes["FormValueType"]>({
-		username: "",
-		password: "",
-	});
 	const loginApi = useAuthStore((state) => state.login);
 	const router = useRouter();
 
-	const handleSubmit: LoginTypes["HandleSubmitType"] = async (event) => {
-		event.preventDefault();
-
+	const handleSubmit: LoginTypes["HandleSubmitType"] = async (
+		emailOrUsername,
+		password
+	) => {
 		try {
-			console.log({
-				email: formValues.username,
-				password: formValues.password,
-			});
-			await loginApi(formValues.username, formValues.password);
+			await loginApi(emailOrUsername, password);
 			router.replace("/");
 		} catch (error) {
 			console.log({ error });
@@ -64,27 +59,65 @@ const Login = () => {
 								Or
 							</div>
 
-							<form onSubmit={handleSubmit} className='grid gap-y-4'>
-								<TextLabelInput
-									formValues={formValues}
-									setFormValues={setFormValues}
-									name='username'
-									title='username'
-									validationError='Please include a valid title so we can get back to you'
-								/>
+							<Formik
+								initialValues={
+									{
+										emailOrUsername: "",
+										password: "",
+									} as LoginTypes["FormValueType"]
+								}
+								validationSchema={loginSchema}
+								onSubmit={(values, { setSubmitting }) => {
+									setTimeout(async () => {
+										setSubmitting(false);
+										await handleSubmit(values.emailOrUsername, values.password);
+									}, 400);
+								}}>
+								{({
+									values,
+									errors,
+									touched,
+									handleChange,
+									handleBlur,
+									handleSubmit,
+									isSubmitting,
+								}) => (
+									<form onSubmit={handleSubmit} className='grid gap-y-4'>
+										<TextLabelInput
+											name='emailOrUsername'
+											title='email or username'
+											onBlur={handleBlur}
+											value={values.emailOrUsername}
+											handleChange={handleChange}
+											errors={
+												errors.emailOrUsername &&
+												touched.emailOrUsername &&
+												errors.emailOrUsername
+											}
+										/>
 
-								<TextLabelInput
-									formValues={formValues}
-									setFormValues={setFormValues}
-									name='password'
-									title='password'
-									validationError='8+ characters required'
-								/>
+										<TextLabelInput
+											name='password'
+											title='password'
+											inputType='password'
+											onBlur={handleBlur}
+											value={values.password}
+											handleChange={handleChange}
+											errors={
+												errors.password && touched.password && errors.password
+											}
+										/>
 
-								<TextLabelRadioInput />
+										<TextLabelRadioInput labelText='Remember me' />
 
-								<SimpleButton type='submit' title='Sign in' />
-							</form>
+										<SimpleButton
+											type='submit'
+											title='Sign in'
+											disabled={isSubmitting}
+										/>
+									</form>
+								)}
+							</Formik>
 						</div>
 					</div>
 				</div>

@@ -1,23 +1,38 @@
-import React from "react";
+import { Field } from "formik";
+import React, { InputHTMLAttributes, ReactNode } from "react";
 
-type Props = {};
+type Props = {
+	labelText: ReactNode;
+	errors?: string | false | undefined;
+};
 
-const TextLabelRadioInput = (props: Props) => {
+const TextLabelRadioInput = ({ labelText, errors }: Props) => {
 	return (
-		<div className='flex items-center'>
-			<div className='flex'>
-				<input
-					id='remember-me'
-					name='remember-me'
-					type='checkbox'
-					className='shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 pointer-events-none focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800'
-				/>
+		<div className='flex items-start flex-col'>
+			<div className='flex items-center'>
+				<div className='flex'>
+					<Field
+						type='checkbox'
+						name='radioButton'
+						innerRef={(inputRef) => {
+							if (inputRef) {
+								inputRef.id = "remember-me";
+							}
+						}}
+					/>
+				</div>
+				<div className='ms-3'>
+					<label htmlFor='remember-me' className='text-sm dark:text-white'>
+						{labelText}
+					</label>
+				</div>
 			</div>
-			<div className='ms-3'>
-				<label htmlFor='remember-me' className='text-sm dark:text-white'>
-					Remember me
-				</label>
-			</div>
+			{/* Input Validation Error */}
+			<p
+				className={`${errors ? "block" : "hidden"} text-xs text-red-600 mt-2`}
+				id='email-error'>
+				{errors}
+			</p>
 		</div>
 	);
 };
