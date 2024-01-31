@@ -1,14 +1,23 @@
 import React from "react";
 
-type Props = {};
+type Props = {
+	fullScreen?: boolean;
+	iconColor?: string;
+	backgroundColor?: string;
+};
 
-const Spinners = (props: Props) => {
+const Spinners = ({ fullScreen = true, iconColor, backgroundColor }: Props) => {
 	return (
-		<div className='h-full min-h-screen flex flex-col bg-white'>
-			<div className='flex flex-auto flex-col justify-center items-center p-4 md:p-5'>
+		<div
+			className={`${fullScreen ? "h-full min-h-screen" : ""} flex flex-col ${
+				backgroundColor ? backgroundColor : "bg-white"
+			}`}>
+			<div className='flex flex-auto flex-col justify-center items-center'>
 				<div className='flex justify-center'>
 					<div
-						className='animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500'
+						className={`animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent rounded-full  ${
+							iconColor ? iconColor : "dark:text-blue-500 text-blue-600 "
+						}`}
 						role='status'
 						aria-label='loading'>
 						<span className='sr-only'>Loading...</span>

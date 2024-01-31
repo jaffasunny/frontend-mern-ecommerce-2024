@@ -16,6 +16,10 @@ import { loginSchema } from "@/utils/validationSchema";
 
 const Login = () => {
 	const loginApi = useAuthStore((state) => state.login);
+	const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+	const isLoading = useAuthStore((state) => state.loading);
+	const isError = useAuthStore((state) => state.error);
+
 	const router = useRouter();
 
 	const handleSubmit: LoginTypes["HandleSubmitType"] = async (
@@ -24,7 +28,9 @@ const Login = () => {
 	) => {
 		try {
 			await loginApi(emailOrUsername, password);
-			router.replace("/");
+			if (isAuthenticated) {
+				router.replace("/");
+			}
 		} catch (error) {
 			console.log({ error });
 		}
@@ -64,6 +70,7 @@ const Login = () => {
 									{
 										emailOrUsername: "",
 										password: "",
+										radioButton: false,
 									} as LoginTypes["FormValueType"]
 								}
 								validationSchema={loginSchema}
@@ -114,6 +121,7 @@ const Login = () => {
 											type='submit'
 											title='Sign in'
 											disabled={isSubmitting}
+											isLoading={isLoading}
 										/>
 									</form>
 								)}

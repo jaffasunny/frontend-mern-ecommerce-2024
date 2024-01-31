@@ -1,23 +1,6 @@
-import { AuthResponse } from "@/types";
+import { AuthResponse, LOGIN_API_TYPES, SIGNUP_API_TYPES } from "@/types";
 import { DEV_BASE_URL, PROD_BASE_URL } from "@/utils/constant";
 import axios from "axios";
-
-interface LOGIN_API_TYPES {
-	fnType: (
-		emailOrUsername: string,
-		password: string
-	) => Promise<void | AuthResponse>;
-}
-
-interface SIGNUP_API_TYPES {
-	fnType: (
-		firstName: string,
-		lastName: string,
-		username: string,
-		email: string,
-		password: string
-	) => Promise<void | AuthResponse>;
-}
 
 export const LoginAPI: LOGIN_API_TYPES["fnType"] = async (
 	emailOrUsername,
@@ -38,13 +21,25 @@ export const LoginAPI: LOGIN_API_TYPES["fnType"] = async (
 			}
 		);
 
-		return response.data;
+		return response;
 	} catch (error) {
-		if (axios.isAxiosError(error)) {
-			console.log("error message: ", error.message);
-		} else {
-			console.log("unexpected error: ", error);
-		}
+		return error;
+	}
+};
+
+export const LogoutAPI = async (user) => {
+	try {
+		const response = await axios.post(PROD_BASE_URL + "/users/logout", {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.data.accessToken}`,
+			},
+		});
+
+		return response;
+	} catch (error) {
+		return error;
 	}
 };
 
@@ -73,12 +68,40 @@ export const SignupAPI: SIGNUP_API_TYPES["fnType"] = async (
 			}
 		);
 
-		return response.data;
+		return response;
 	} catch (error) {
-		if (axios.isAxiosError(error)) {
-			console.log("error message: ", error.message);
-		} else {
-			console.log("unexpected error: ", error);
-		}
+		return error;
+	}
+};
+
+export const GetProductAPI = async (user) => {
+	try {
+		const response = await axios.get(PROD_BASE_URL + "/products", {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.data.accessToken}`,
+			},
+		});
+
+		return response.data.data;
+	} catch (error) {
+		return error;
+	}
+};
+
+export const GetSingleProductAPI = async (user, id) => {
+	try {
+		const response = await axios.get(PROD_BASE_URL + `/products/${id}`, {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.data.accessToken}`,
+			},
+		});
+
+		return response.data.data;
+	} catch (error) {
+		return error;
 	}
 };

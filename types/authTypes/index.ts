@@ -1,27 +1,34 @@
 export interface AuthResponse {
 	statusCode: string;
-	data: object;
+	user: object | unknown;
 	message: string;
 	success: boolean;
 }
 
+export interface AuthError {
+	statusCode: string;
+	user: object | unknown;
+	message: string;
+	success: boolean;
+	errors: [];
+}
+
 export interface AuthState {
-	user: object;
+	user: object | unknown;
 	isAuthenticated: boolean;
+	loading: boolean;
+	error: null | string | object;
 }
 
 export interface AuthAction {
-	login: (
-		emailOrUsername: string,
-		password: string
-	) => Promise<AuthResponse | string | void>;
+	login: (emailOrUsername: string, password: string) => Promise<unknown>;
 	signup: (
 		firstName: string,
 		lastName: string,
 		username: string,
 		email: string,
 		password: string
-	) => Promise<AuthResponse | string | void>;
+	) => Promise<unknown>;
 	logout: () => void;
 }
 
@@ -53,4 +60,18 @@ export interface SignupTypes {
 		confirmPassword: string;
 		radioButton: boolean;
 	};
+}
+
+export interface LOGIN_API_TYPES {
+	fnType: (emailOrUsername: string, password: string) => Promise<unknown>;
+}
+
+export interface SIGNUP_API_TYPES {
+	fnType: (
+		firstName: string,
+		lastName: string,
+		username: string,
+		email: string,
+		password: string
+	) => Promise<unknown>;
 }

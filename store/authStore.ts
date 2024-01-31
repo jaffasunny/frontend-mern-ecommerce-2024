@@ -1,20 +1,39 @@
 import { create } from "zustand";
 import { AuthAction, AuthState } from "@/types";
 import { persist } from "zustand/middleware";
-import { LoginAPI, SignupAPI } from "@/utils/Apis";
+import { LoginAPI, LogoutAPI, SignupAPI } from "@/utils/Apis";
 
 export const useAuthStore = create<AuthState & AuthAction>()(
 	persist(
-		(set) => ({
+		(set, get) => ({
 			user: {},
 			isAuthenticated: false,
+			loading: false,
+			error: null,
+
 			login: async (username: string, password: string) => {
-				let response = await LoginAPI(username, password);
+				try {
+					set({ loading: true, error: null });
 
-				if (response) {
-					set({ user: response, isAuthenticated: true });
+					let response = await LoginAPI(username, password);
 
-					return response;
+					if (response === "Network Error") {
+						set({
+							loading: false,
+							user: {},
+							error: response,
+							isAuthenticated: false,
+						});
+
+						return response;
+					} else {
+						set({ loading: false, user: response, isAuthenticated: true });
+
+						return response;
+					}
+				} catch (error) {
+					console.log("Error in login", error);
+					set({ error: error || "An error occurred" });
 				}
 			},
 			signup: async (
@@ -24,23 +43,56 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 				email: string,
 				password: string
 			) => {
-				let response = await SignupAPI(
-					firstName,
-					lastName,
-					username,
-					email,
-					password
-				);
+				try {
+					set({ loading: true, error: null });
 
-				if (response) {
-					set({ user: response, isAuthenticated: true });
+					let response = await SignupAPI(
+						firstName,
+						lastName,
+						username,
+						email,
+						password
+					);
 
-					return response;
+					if (response === "Network Error") {
+						set({
+							loading: false,
+							user: {},
+							error: response,
+							isAuthenticated: false,
+						});
+
+						return response;
+					} else {
+						set({ loading: false, user: response, isAuthenticated: true });
+
+						return response;
+					}
+				} catch (error) {
+					console.log("Error in login", error);
+					set({ error: error || "An error occurred" });
 				}
 			},
 
-			logout: () => {
-				set({ user: {}, isAuthenticated: false });
+			logout: async () => {
+				try {
+					set({ loading: true, error: null });
+
+					let response = await LogoutAPI(get().user);
+
+					if (response === "Network Error") {
+						set({
+							loading: false,
+							user: get().user,
+							error: response,
+							isAuthenticated: get().isAuthenticated,
+						});
+					} else {
+						set({ loading: false, user: {}, isAuthenticated: false });
+					}
+				} catch (error) {
+					console.log({ error });
+				}
 			},
 		}),
 		{

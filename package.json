@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@preline/collapse": "^2.0.2",
     "@stripe/stripe-js": "^2.3.0",
     "@types/stripe": "^8.0.417",
     "axios": "^1.6.5",
+    "clsx": "^2.1.0",
     "formik": "^2.4.5",
     "idb-keyval": "^6.2.1",
     "next": "14.0.4",

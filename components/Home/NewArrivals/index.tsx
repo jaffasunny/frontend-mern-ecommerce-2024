@@ -1,0 +1,54 @@
+import PriceCard from "@/components/Card/PriceCard";
+import Skeleton from "@/components/Skeleton";
+import { useAuthStore } from "@/store/authStore";
+import { GetProductAPI } from "@/utils/Apis";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+
+type Props = {};
+
+const NewArrivals = (props: Props) => {
+	const userInfo = useAuthStore((state) => state.user);
+	const [products, setProducts] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const GetAllProducts = async () => {
+		try {
+			setIsLoading(true);
+			const response = await GetProductAPI(userInfo);
+
+			setProducts(response);
+			setIsLoading(false);
+		} catch (error) {
+			console.log({ error });
+			setIsLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		GetAllProducts();
+	}, []);
+
+	return (
+		<section className='bg-white max-w-[85rem] mx-auto py-16 px-4 sm:px-6 lg:px-8'>
+			<h2 className='font-integralCF text-5xl font-bold text-center mb-14'>
+				New Arrivals
+			</h2>
+
+			{/* Card Section */}
+			{isLoading ? (
+				<Skeleton />
+			) : (
+				<section className='grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5'>
+					{products.map((product) => (
+						<Link href={"/product/" + product._id}>
+							<PriceCard data={product} key={product?._id} />
+						</Link>
+					))}
+				</section>
+			)}
+		</section>
+	);
+};
+
+export default NewArrivals;

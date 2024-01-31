@@ -17,6 +17,10 @@ type Props = {};
 
 const Signup = (props: Props) => {
 	const signupApi = useAuthStore((state) => state.signup);
+	const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+	const isLoading = useAuthStore((state) => state.loading);
+	const isError = useAuthStore((state) => state.error);
+
 	const router = useRouter();
 
 	const handleSubmit: SignupTypes["HandleSubmitType"] = async (
@@ -28,7 +32,9 @@ const Signup = (props: Props) => {
 	) => {
 		try {
 			await signupApi(firstName, lastName, username, email, password);
-			router.replace("/");
+			if (isAuthenticated) {
+				router.replace("/");
+			}
 		} catch (error) {
 			console.log({ error });
 		}
@@ -179,6 +185,7 @@ const Signup = (props: Props) => {
 											type='submit'
 											title='Sign up'
 											disabled={isSubmitting}
+											isLoading={isLoading}
 										/>
 									</form>
 								)}
