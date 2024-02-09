@@ -1,5 +1,6 @@
 "use client";
 
+import withHeaderFooter from "@/app/withHeaderFooter";
 import isNotAuth from "@/components/Auth/isNotAuth";
 import Skeleton from "@/components/Skeleton";
 import { useAuthStore } from "@/store/authStore";
@@ -11,6 +12,7 @@ type Props = {};
 
 const Product = (props: Props) => {
 	const userInfo = useAuthStore((state) => state.user);
+	// const refreshTokenApi = useAuthStore((state) => state.refreshAccessToken);
 
 	const [product, setProduct] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +27,7 @@ const Product = (props: Props) => {
 			setIsLoading(true);
 			const response = await GetSingleProductAPI(userInfo, slug);
 
-			setProduct(response);
+			setProduct(response.data);
 			setIsLoading(false);
 		} catch (error) {
 			console.log({ error });
@@ -209,4 +211,4 @@ const Product = (props: Props) => {
 	);
 };
 
-export default isNotAuth(Product);
+export default isNotAuth(withHeaderFooter(Product));

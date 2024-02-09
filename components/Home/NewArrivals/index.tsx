@@ -1,6 +1,7 @@
 import PriceCard from "@/components/Card/PriceCard";
 import Skeleton from "@/components/Skeleton";
 import { useAuthStore } from "@/store/authStore";
+import { TGetProductAPI } from "@/types";
 import { GetProductAPI } from "@/utils/Apis";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -9,7 +10,11 @@ type Props = {};
 
 const NewArrivals = (props: Props) => {
 	const userInfo = useAuthStore((state) => state.user);
-	const [products, setProducts] = useState([]);
+	const storeRefreshAccessToken = useAuthStore(
+		(state) => state.refreshAccessToken
+	);
+
+	const [products, setProducts] = useState<object[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const GetAllProducts = async () => {
@@ -17,17 +22,23 @@ const NewArrivals = (props: Props) => {
 			setIsLoading(true);
 			const response = await GetProductAPI(userInfo);
 
-			setProducts(response);
+			if (response?.message === "Access token refreshed successfully!") {
+				storeRefreshAccessToken(response.data);
+			}
+
+			if (response?.statusCode === 200) {
+				const _response = response as TGetProductAPI;
+				setProducts(_response.data);
+			}
 			setIsLoading(false);
 		} catch (error) {
-			console.log({ error });
 			setIsLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		GetAllProducts();
-	}, []);
+	}, [userInfo.data.accessToken, userInfo.data.refreshToken]);
 
 	return (
 		<section className='bg-white max-w-[85rem] mx-auto py-16 px-4 sm:px-6 lg:px-8'>
@@ -41,8 +52,8 @@ const NewArrivals = (props: Props) => {
 			) : (
 				<section className='grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5'>
 					{products.map((product) => (
-						<Link href={"/product/" + product._id}>
-							<PriceCard data={product} key={product?._id} />
+						<Link href={"/product/" + product._id} key={product?._id}>
+							<PriceCard data={product} />
 						</Link>
 					))}
 				</section>

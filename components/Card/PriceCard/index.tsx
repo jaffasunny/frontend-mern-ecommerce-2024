@@ -2,14 +2,11 @@ import React from "react";
 
 type Props = {
 	data: object;
-	key: React.Key | null | undefined;
 };
 
-const PriceCard = ({ data, key }: Props) => {
+const PriceCard = ({ data }: Props) => {
 	return (
-		<div
-			className='flex flex-col items-center bg-white rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7] font-satoshi'
-			key={key}>
+		<div className='flex flex-col items-center bg-white rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7] font-satoshi'>
 			<img
 				className='w-[240px] h-[240px] rounded-t-xl'
 				src={

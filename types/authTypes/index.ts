@@ -1,35 +1,60 @@
 export interface AuthResponse {
 	statusCode: string;
-	user: object | unknown;
+	user: object;
 	message: string;
 	success: boolean;
+	apiResponse: object;
 }
 
 export interface AuthError {
 	statusCode: string;
-	user: object | unknown;
+	user: object;
 	message: string;
 	success: boolean;
 	errors: [];
 }
 
+export type TUserType = {
+	data: {
+		accessToken: string;
+		refreshToken: string;
+		user: object;
+	};
+	message: string;
+	statusCode: number | null;
+	success: boolean;
+};
+
 export interface AuthState {
-	user: object | unknown;
+	user: TUserType;
 	isAuthenticated: boolean;
 	loading: boolean;
 	error: null | string | object;
+	apiResponse: object | null;
 }
 
 export interface AuthAction {
-	login: (emailOrUsername: string, password: string) => Promise<unknown>;
+	login: (
+		emailOrUsername: string,
+		password: string
+	) => Promise<TUserType | undefined | string>;
 	signup: (
 		firstName: string,
 		lastName: string,
 		username: string,
 		email: string,
 		password: string
-	) => Promise<unknown>;
+	) => Promise<void>;
 	logout: () => void;
+	refreshAccessToken: (
+		newRefreshTokenAndAccessToken:
+			| {
+					accessToken: string;
+					refreshToken: string;
+			  }
+			| object[]
+	) => void;
+	clearApiResponse: () => void;
 }
 
 export interface LoginTypes {
@@ -63,7 +88,10 @@ export interface SignupTypes {
 }
 
 export interface LOGIN_API_TYPES {
-	fnType: (emailOrUsername: string, password: string) => Promise<unknown>;
+	fnType: (
+		emailOrUsername: string,
+		password: string
+	) => Promise<TUserType | undefined | string>;
 }
 
 export interface SIGNUP_API_TYPES {
@@ -73,5 +101,26 @@ export interface SIGNUP_API_TYPES {
 		username: string,
 		email: string,
 		password: string
-	) => Promise<unknown>;
+	) => Promise<object | string>;
 }
+
+export type TGetProductAPI = {
+	data: Array<object>;
+	message: string;
+	statusCode: number;
+	success: boolean;
+};
+
+export type TRefreshTokenAPI = (
+	user: TUserType
+) => Promise<TRefreshTokenResponse>;
+
+export type TRefreshTokenResponse = {
+	statusCode: number;
+	data: {
+		accessToken: string;
+		refreshToken: string;
+	};
+	message: string;
+	success: boolean;
+};

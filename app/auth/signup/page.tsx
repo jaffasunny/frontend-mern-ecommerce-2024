@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GoogleSvg from "@/public/icons/Google.svg";
 import Link from "next/link";
 import IconButton from "@/components/Button/IconButton";
@@ -12,14 +12,16 @@ import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { Formik } from "formik";
 import { signupSchema } from "@/utils/validationSchema";
+import isAuth from "@/components/Auth/IsAuth";
 
 type Props = {};
 
 const Signup = (props: Props) => {
 	const signupApi = useAuthStore((state) => state.signup);
-	const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+	const apiResponse = useAuthStore((state) => state.apiResponse);
 	const isLoading = useAuthStore((state) => state.loading);
 	const isError = useAuthStore((state) => state.error);
+	const clearApiResponse = useAuthStore((state) => state.clearApiResponse);
 
 	const router = useRouter();
 
@@ -32,13 +34,17 @@ const Signup = (props: Props) => {
 	) => {
 		try {
 			await signupApi(firstName, lastName, username, email, password);
-			if (isAuthenticated) {
-				router.replace("/");
-			}
 		} catch (error) {
 			console.log({ error });
 		}
 	};
+
+	useEffect(() => {
+		if (apiResponse) {
+			router.replace("/auth/login");
+			clearApiResponse();
+		}
+	}, [apiResponse]);
 
 	return (
 		<div className='dark:bg-slate-900 bg-gray-100 flex min-h-screen h-full items-center'>

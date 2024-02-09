@@ -17,9 +17,6 @@ const Navbar = (props: Props) => {
 	const handleLogout = async () => {
 		try {
 			await logout();
-			if (!user) {
-				router.replace("/auth/login");
-			}
 		} catch (error) {
 			console.log({ error });
 		}

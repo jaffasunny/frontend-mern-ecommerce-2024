@@ -5,8 +5,6 @@ function useFetch(apiCallFunction) {
 	const [error, setError] = useState<object | null>(null);
 	const [data, setData] = useState<object | null>(null);
 
-	console.log({ useFetchData: data });
-
 	const fetchData = async () => {
 		setIsLoading(true);
 		setError(null);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginTypes } from "@/types";
 import GoogleSvg from "@/public/icons/Google.svg";
 import { useAuthStore } from "@/store/authStore";
@@ -16,7 +16,6 @@ import { loginSchema } from "@/utils/validationSchema";
 
 const Login = () => {
 	const loginApi = useAuthStore((state) => state.login);
-	const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 	const isLoading = useAuthStore((state) => state.loading);
 	const isError = useAuthStore((state) => state.error);
 
@@ -28,9 +27,6 @@ const Login = () => {
 	) => {
 		try {
 			await loginApi(emailOrUsername, password);
-			if (isAuthenticated) {
-				router.replace("/");
-			}
 		} catch (error) {
 			console.log({ error });
 		}

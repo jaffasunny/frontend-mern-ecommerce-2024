@@ -41,8 +41,6 @@ export function Checkout() {
 			sessionId: session.data.id,
 		});
 
-		console.log({ result });
-
 		setTimeout(() => {
 			if (result.error) {
 				console.log(result.error);
