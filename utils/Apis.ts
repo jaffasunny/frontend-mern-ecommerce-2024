@@ -1,7 +1,9 @@
 import {
 	LOGIN_API_TYPES,
 	SIGNUP_API_TYPES,
+	TAddToCartAPIBody,
 	TGetProductAPI,
+	TGetSingleProductAPI,
 	TRefreshTokenResponse,
 	TUserType,
 } from "@/types";
@@ -27,7 +29,7 @@ export const LoginAPI: LOGIN_API_TYPES["fnType"] = async (
 			}
 		);
 
-		return response;
+		return response.data;
 	} catch (error) {
 		console.error("Login error:", error);
 	}
@@ -124,9 +126,35 @@ export const GetProductAPI = async (user: TUserType) => {
 	}
 };
 
-export const GetSingleProductAPI = async (user: TUserType, id: string) => {
+export const GetSingleProductAPI = async (
+	user: TUserType,
+	id: string | string[]
+) => {
 	try {
-		const response = await axios.get(PROD_BASE_URL + `/products/${id}`, {
+		const response = await axios.get<TGetSingleProductAPI>(
+			PROD_BASE_URL + `/products/${id}`,
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+					Authorization: `Bearer ${user.data.accessToken}`,
+				},
+			}
+		);
+
+		return response.data;
+	} catch (error) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+	}
+};
+
+export const GetCartAPI = async (user: TUserType) => {
+	try {
+		const response = await axios.get(PROD_BASE_URL + "/carts", {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
@@ -139,10 +167,56 @@ export const GetSingleProductAPI = async (user: TUserType, id: string) => {
 		if (error.response.status === 401) {
 			const response = await RefreshAccessTokenAPI(user);
 
-			return {
-				message: "Access Token refreshed",
-				data: response,
-			};
+			return response;
+		}
+	}
+};
+
+export const AddToCartAPI = async (
+	user: TUserType,
+	body: TAddToCartAPIBody
+) => {
+	try {
+		const response = await axios.post(PROD_BASE_URL + "/carts", body, {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.accessToken}`,
+			},
+		});
+
+		return response.data;
+	} catch (error) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+	}
+};
+
+export const RemoveItemFromCartApi = async (
+	user: TUserType,
+	cartItemId: string
+) => {
+	try {
+		const response = await axios.delete(
+			PROD_BASE_URL + "/carts/" + cartItemId,
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+					Authorization: `Bearer ${user.data.accessToken}`,
+				},
+			}
+		);
+
+		return response.data;
+	} catch (error) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
 		}
 	}
 };

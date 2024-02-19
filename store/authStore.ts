@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 						});
 
 						return response;
-					} else if (typeof response !== "string") {
+					} else if (typeof response !== "string" && response) {
 						set({
 							loading: false,
 							user: response,

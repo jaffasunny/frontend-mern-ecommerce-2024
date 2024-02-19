@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SearchInput from "@/components/Inputs/SearchInput";
 import LogoutIcon from "@/public/icons/logoutIcon.svg";
 import ProfileIcon from "@/public/icons/ProfileIcon.svg";
 import CartIcon from "@/public/icons/cartIcon.svg";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useCartStore } from "@/store/cartStore";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
 	const logout = useAuthStore((state) => state.logout);
 	const user = useAuthStore((state) => state.user);
+	const cart = useCartStore((state) => state.cart);
+	const getCart = useCartStore((state) => state.getCart);
+	const cartCount = useCartStore((state) => state.cartCount);
 
 	const router = useRouter();
 
@@ -22,17 +27,21 @@ const Navbar = (props: Props) => {
 		}
 	};
 
+	useEffect(() => {
+		getCart();
+	}, []);
+
 	return (
 		<nav
 			className='shadow-md relative max-w-[85rem] backdrop-blur-md bg-white/30 border border-gray-200 rounded-[36px] py-3 px-4 md:flex md:items-center md:justify-between md:py-0 md:px-6 lg:px-8 dark:bg-gray-800 dark:border-gray-700 w-full'
 			aria-label='Global'>
 			<div className='flex items-center justify-between'>
-				<a
+				<Link
 					className='flex-none text-2xl dark:text-white font-integralCF font-bold'
-					href='#'
+					href='/'
 					aria-label='Brand'>
 					Brand
-				</a>
+				</Link>
 				<div className='md:hidden'>
 					<button
 						type='button'
@@ -181,11 +190,16 @@ const Navbar = (props: Props) => {
 
 					{/* Login & Logout */}
 					<div className='md:border-s md:border-gray-300 flex items-center h-4'>
-						<a
-							className='flex items-center font-regular text-sm text-gray-500 hover:text-blue-600 md:my-6 md:ps-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500'
-							href='#'>
+						<Link
+							className='flex items-center font-regular text-sm text-gray-500 hover:text-blue-600 md:my-6 md:ps-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500 relative'
+							href='/cart'>
 							<CartIcon className='text-lg w-4 h-4' />
-						</a>
+							{cartCount >= 0 ? (
+								<span className='absolute top-[-10px] right-[-10px] w-4 h-4 bg-red-300 rounded-full text-xs text-white flex items-center justify-center'>
+									{cartCount}
+								</span>
+							) : null}
+						</Link>
 						<a
 							className='flex items-center font-regular text-sm text-gray-500 hover:text-blue-600 md:my-6 md:ps-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500'
 							href='#'>

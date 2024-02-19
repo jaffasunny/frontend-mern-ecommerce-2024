@@ -16,7 +16,7 @@ export default function withHeaderFooter<P extends object>(
 		...props
 	}: WithHeaderFooterProps<P>) {
 		return (
-			<div className='bg-[#F2F0F1] '>
+			<div className='bg-[#F2F0F1] flex flex-col justify-between min-h-screen'>
 				<Header />
 				<Component {...props}>{children}</Component>
 				<Footer />

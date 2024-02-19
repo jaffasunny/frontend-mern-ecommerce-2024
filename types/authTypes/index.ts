@@ -91,7 +91,9 @@ export interface LOGIN_API_TYPES {
 	fnType: (
 		emailOrUsername: string,
 		password: string
-	) => Promise<TUserType | undefined | string>;
+	) => Promise<
+		{ accessToken: string; refreshToken: string; user: object } | undefined
+	>;
 }
 
 export interface SIGNUP_API_TYPES {
@@ -106,6 +108,39 @@ export interface SIGNUP_API_TYPES {
 
 export type TGetProductAPI = {
 	data: Array<object>;
+	message: string;
+	statusCode: number;
+	success: boolean;
+};
+
+export type TGetSingleProductAPI = {
+	data: {
+		_id: string;
+		productName: string;
+		category?: string[];
+		description: string;
+		image: string;
+		rating?: {
+			average: number;
+			count: number;
+			_id: string;
+		};
+		sellerId?: {
+			_id: string;
+			firstName: string;
+			lastName: string;
+			username: string;
+			email: string;
+			roles: string[];
+			isProfileComplete: boolean;
+			createdAt: string;
+			updatedAt: string;
+		};
+		price: number;
+		quantity?: number;
+		createdAt?: string;
+		updatedAt?: string;
+	};
 	message: string;
 	statusCode: number;
 	success: boolean;
