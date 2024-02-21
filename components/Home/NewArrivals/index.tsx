@@ -20,13 +20,12 @@ const NewArrivals = (props: Props) => {
 	const GetAllProducts = async () => {
 		try {
 			setIsLoading(true);
+
 			const response = await GetProductAPI(userInfo);
 
 			if (response?.message === "Access token refreshed successfully!") {
 				storeRefreshAccessToken(response.data);
-			}
-
-			if (response?.statusCode === 200) {
+			} else {
 				const _response = response as TGetProductAPI;
 				setProducts(_response.data);
 			}
@@ -38,7 +37,7 @@ const NewArrivals = (props: Props) => {
 
 	useEffect(() => {
 		GetAllProducts();
-	}, [userInfo.data.accessToken, userInfo.data.refreshToken]);
+	}, [userInfo.data.accessToken]);
 
 	return (
 		<section className='bg-white max-w-[85rem] mx-auto py-16 px-4 sm:px-6 lg:px-8'>
@@ -52,7 +51,7 @@ const NewArrivals = (props: Props) => {
 			) : (
 				<section className='grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5'>
 					{products.map((product) => (
-						<Link href={"/product/" + product._id} key={product?._id}>
+						<Link href={"/product/" + product._id} key={product._id}>
 							<PriceCard data={product} />
 						</Link>
 					))}

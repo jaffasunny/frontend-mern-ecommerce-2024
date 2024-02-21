@@ -22,19 +22,23 @@ export const useCartStore = create<CartState & CartAction>()(
 
 					let response = await GetCartAPI(useAuthStore.getState().user);
 
-					if (response === "Network Error") {
-						set({
-							loading: false,
-							cart: null,
-							error: response,
-						});
+					if (response?.message === "Access token refreshed successfully!") {
+						useAuthStore.getState().refreshAccessToken(response.data);
 					} else {
-						set({
-							loading: false,
-							cart: response,
-							error: {},
-							cartCount: response?.data[0]?.items.length,
-						});
+						if (response === "Network Error") {
+							set({
+								loading: false,
+								cart: null,
+								error: response,
+							});
+						} else {
+							set({
+								loading: false,
+								cart: response,
+								error: {},
+								cartCount: response?.data[0]?.items.length,
+							});
+						}
 					}
 				} catch (error) {
 					console.log({ error });
