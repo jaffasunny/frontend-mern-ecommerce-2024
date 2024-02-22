@@ -2,7 +2,7 @@
 
 import isNotAuth from "@/components/Auth/isNotAuth";
 import React from "react";
-import withHeaderFooter from "./withHeaderFooter";
+import withHeaderFooter from "../components/HOC/withHeaderFooter";
 import HeroSection from "@/components/Home/HeroSection";
 import NewArrivals from "@/components/Home/NewArrivals";
 

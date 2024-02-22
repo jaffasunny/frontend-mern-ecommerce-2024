@@ -66,7 +66,7 @@ export type CartState = {
 	cart: TCartType;
 	loading: boolean;
 	processLoading: boolean;
-	error: null | string | object;
+	error: unknown;
 	apiResponse: object | null;
 	cartCount: number;
 };

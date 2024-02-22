@@ -14,7 +14,13 @@ const NewArrivals = (props: Props) => {
 		(state) => state.refreshAccessToken
 	);
 
-	const [products, setProducts] = useState<object[]>([]);
+	const [products, setProducts] = useState<
+		{
+			_id: string;
+			image: string;
+			productName: string;
+		}[]
+	>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const GetAllProducts = async () => {

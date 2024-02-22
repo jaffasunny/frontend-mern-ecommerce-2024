@@ -4,8 +4,8 @@ import React, { ReactElement } from "react";
 type Props = {
 	icon?: ReactElement<any, any>;
 	text: string;
-	buttonStyles: string;
-	textStyles: string;
+	buttonStyles?: string;
+	textStyles?: string;
 	endIcon?: ReactElement<any, any>;
 };
 

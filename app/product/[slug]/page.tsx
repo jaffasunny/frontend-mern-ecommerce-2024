@@ -1,6 +1,6 @@
 "use client";
 
-import withHeaderFooter from "@/app/withHeaderFooter";
+import withHeaderFooter from "@/components/HOC/withHeaderFooter";
 import isNotAuth from "@/components/Auth/isNotAuth";
 import SimpleButton from "@/components/Button/SimpleButton";
 import SimpleModal from "@/components/Modal/SimpleModal";
@@ -50,7 +50,9 @@ const Product = (props: Props) => {
 				}
 
 				if (response?.statusCode === 200) {
-					setProduct(response.data);
+					const _response = response as TGetSingleProductAPI;
+
+					setProduct(_response.data);
 				}
 				setIsLoading(false);
 			} catch (error) {
@@ -68,11 +70,13 @@ const Product = (props: Props) => {
 
 	const selectedOptions = useMemo(
 		() =>
-			Array.from({ length: product.quantity }, (_, i) => i + 1).map((i) => (
-				<option key={i} value={i}>
-					{i}
-				</option>
-			)),
+			Array.from({ length: product.quantity as number }, (_, i) => i + 1).map(
+				(i) => (
+					<option key={i} value={i}>
+						{i}
+					</option>
+				)
+			),
 		[product.quantity]
 	);
 

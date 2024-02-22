@@ -1,5 +1,5 @@
 import { Field } from "formik";
-import React, { InputHTMLAttributes, ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 type Props = {
 	labelText: ReactNode;
@@ -14,7 +14,7 @@ const TextLabelRadioInput = ({ labelText, errors }: Props) => {
 					<Field
 						type='checkbox'
 						name='radioButton'
-						innerRef={(inputRef) => {
+						innerRef={(inputRef: any) => {
 							if (inputRef) {
 								inputRef.id = "remember-me";
 							}

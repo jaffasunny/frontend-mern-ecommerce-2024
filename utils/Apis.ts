@@ -117,12 +117,13 @@ export const GetProductAPI = async (user: TUserType) => {
 		);
 
 		return response.data;
-	} catch (error) {
+	} catch (error: any) {
 		if (error.response.status === 401) {
 			const response = await RefreshAccessTokenAPI(user);
 
 			return response;
 		}
+		console.log(error);
 	}
 };
 
@@ -143,12 +144,13 @@ export const GetSingleProductAPI = async (
 		);
 
 		return response.data;
-	} catch (error) {
+	} catch (error: any) {
 		if (error.response.status === 401) {
 			const response = await RefreshAccessTokenAPI(user);
 
 			return response;
 		}
+		console.log(error);
 	}
 };
 
@@ -163,12 +165,13 @@ export const GetCartAPI = async (user: TUserType) => {
 		});
 
 		return response.data;
-	} catch (error) {
+	} catch (error: any) {
 		if (error.response.status === 401) {
 			const response = await RefreshAccessTokenAPI(user);
 
 			return response;
 		}
+		console.log(error);
 	}
 };
 
@@ -186,12 +189,13 @@ export const AddToCartAPI = async (
 		});
 
 		return response.data;
-	} catch (error) {
+	} catch (error: any) {
 		if (error.response.status === 401) {
 			const response = await RefreshAccessTokenAPI(user);
 
 			return response;
 		}
+		console.log(error);
 	}
 };
 
@@ -212,11 +216,12 @@ export const RemoveItemFromCartApi = async (
 		);
 
 		return response.data;
-	} catch (error) {
+	} catch (error: any) {
 		if (error.response.status === 401) {
 			const response = await RefreshAccessTokenAPI(user);
 
 			return response;
 		}
+		console.log(error);
 	}
 };

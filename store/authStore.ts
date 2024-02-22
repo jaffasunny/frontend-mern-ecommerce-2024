@@ -31,11 +31,9 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 					} else if (typeof response !== "string" && response) {
 						set({
 							loading: false,
-							user: response,
+							user: { ...get().user, data: response },
 							isAuthenticated: true,
 						});
-
-						return response;
 					}
 				} catch (error) {
 					set({ error: error || "An error occurred" });

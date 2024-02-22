@@ -1,6 +1,6 @@
 "use client";
 
-import withHeaderFooter from "@/app/withHeaderFooter";
+import withHeaderFooter from "@/components/HOC/withHeaderFooter";
 import isNotAuth from "@/components/Auth/isNotAuth";
 import Skeleton from "@/components/Skeleton";
 import { useCartStore } from "@/store/cartStore";

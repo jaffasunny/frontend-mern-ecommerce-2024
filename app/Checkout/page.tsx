@@ -1,13 +1,28 @@
 "use client";
 
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, Stripe, StripeError } from "@stripe/stripe-js";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function Checkout() {
+interface Product {
+	name: string;
+	price: number;
+	productOwner: string;
+	description: string;
+	quantity: number;
+}
+
+interface SessionResponse {
+	data: {
+		id: string;
+	};
+	error: StripeError;
+}
+
+const Checkout = () => {
 	const router = useRouter();
 
-	const [product, setProduct] = useState({
+	const [product, setProduct] = useState<Product>({
 		name: "Go FullStack with KnowledgeHut",
 		price: 1000,
 		productOwner: "KnowledgeHut",
@@ -18,9 +33,9 @@ export function Checkout() {
 
 	const makePayment = async () => {
 		const stripe = await loadStripe(
-			process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+			process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 		);
-		const body = { product };
+		const body: { product: Product } = { product };
 		const headers = {
 			"Content-Type": "application/json",
 		};
@@ -31,23 +46,30 @@ export function Checkout() {
 			body: JSON.stringify(body),
 		});
 
-		const session = await response.json();
+		if (!response.ok) {
+			throw new Error(
+				"Failed to create checkout session: " + response.statusText
+			);
+		}
+
+		const session: SessionResponse = await response.json();
 
 		console.log({ res: session });
 		console.log({ id: session.data.id });
 
-		const result = stripe.redirectToCheckout({
-			sessionId: session.data.id,
-		});
+		stripe
+			?.redirectToCheckout({
+				sessionId: session.data.id,
+			})
+			.then((res) => router.push("/success"))
+			.catch((error) => router.push("/cancel"));
 
-		setTimeout(() => {
-			if (result.error) {
-				console.log(result.error);
-				router.push("/cancel");
-			} else {
-				router.push("/success");
-			}
-		}, 2000);
+		// if (result.error) {
+		// 	console.log((result as any).error?.message);
+		// 	router.push("/cancel");
+		// } else {
+		// 	router.push("/success");
+		// }
 	};
 
 	return (
@@ -72,4 +94,6 @@ export function Checkout() {
 			</div>
 		</main>
 	);
-}
+};
+
+export default Checkout;

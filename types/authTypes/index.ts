@@ -92,7 +92,9 @@ export interface LOGIN_API_TYPES {
 		emailOrUsername: string,
 		password: string
 	) => Promise<
-		{ accessToken: string; refreshToken: string; user: object } | undefined
+		| { accessToken: string; refreshToken: string; user: object }
+		| undefined
+		| string
 	>;
 }
 
@@ -107,7 +109,11 @@ export interface SIGNUP_API_TYPES {
 }
 
 export type TGetProductAPI = {
-	data: Array<object>;
+	data: {
+		_id: string;
+		image: string;
+		productName: string;
+	}[];
 	message: string;
 	statusCode: number;
 	success: boolean;

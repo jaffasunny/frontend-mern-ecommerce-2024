@@ -21,7 +21,7 @@ export const signupSchema = Yup.object({
 		.required("Password is Required"),
 	confirmPassword: Yup.string()
 		.required("Confirm password is required")
-		.oneOf([Yup.ref("password"), null], "Passwords must match"),
+		.oneOf([Yup.ref("password")], "Passwords must match"),
 	radioButton: Yup.bool().oneOf(
 		[true],
 		"You must accept the terms and conditions."
