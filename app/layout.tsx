@@ -6,7 +6,7 @@ import Script from "next/script";
 
 export const metadata: Metadata = {
 	title: "Chicify",
-	description: "A site created by Jaffa",
+	description: "A site created by Jaffa!",
 };
 
 export default function RootLayout({
