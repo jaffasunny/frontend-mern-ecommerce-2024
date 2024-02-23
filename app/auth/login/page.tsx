@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { LoginTypes } from "@/types";
 import GoogleSvg from "@/public/icons/Google.svg";
 import { useAuthStore } from "@/store/authStore";
-import { useRouter } from "next/navigation";
 import isAuth from "@/components/Auth/IsAuth";
 import Link from "next/link";
 import TextLabelInput from "@/components/Inputs/TextLabelInput";
@@ -18,8 +16,6 @@ const Login = () => {
 	const loginApi = useAuthStore((state) => state.login);
 	const isLoading = useAuthStore((state) => state.loading);
 	const isError = useAuthStore((state) => state.error);
-
-	const router = useRouter();
 
 	const handleSubmit: LoginTypes["HandleSubmitType"] = async (
 		emailOrUsername,

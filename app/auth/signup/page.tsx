@@ -12,7 +12,6 @@ import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { Formik } from "formik";
 import { signupSchema } from "@/utils/validationSchema";
-import isAuth from "@/components/Auth/IsAuth";
 
 type Props = {};
 

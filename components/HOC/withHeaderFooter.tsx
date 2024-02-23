@@ -8,9 +8,9 @@ interface WithHeaderFooterProps<P> {
 	props: P;
 }
 
-export default function withHeaderFooter<P extends object>(
+const withHeaderFooter = <P extends object>(
 	Component: React.ComponentType<{ children: React.ReactNode; props: P }>
-): React.FC<WithHeaderFooterProps<P>> {
+): React.FC<WithHeaderFooterProps<P>> => {
 	return function WithHeaderFooter({
 		children,
 		...props
@@ -23,4 +23,6 @@ export default function withHeaderFooter<P extends object>(
 			</div>
 		);
 	};
-}
+};
+
+export default withHeaderFooter;

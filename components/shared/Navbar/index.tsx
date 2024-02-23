@@ -4,7 +4,6 @@ import LogoutIcon from "@/public/icons/logoutIcon.svg";
 import ProfileIcon from "@/public/icons/ProfileIcon.svg";
 import CartIcon from "@/public/icons/cartIcon.svg";
 import { useAuthStore } from "@/store/authStore";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
 
@@ -16,8 +15,6 @@ const Navbar = (props: Props) => {
 	const cart = useCartStore((state) => state.cart);
 	const getCart = useCartStore((state) => state.getCart);
 	const cartCount = useCartStore((state) => state.cartCount);
-
-	const router = useRouter();
 
 	const handleLogout = async () => {
 		try {

@@ -1,27 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-import { IStaticMethods } from "preline/preline";
-import { HSStaticMethods } from "preline";
 declare global {
 	interface Window {
-		HSStaticMethods: IStaticMethods;
+		HSStaticMethods: any;
 	}
 }
 
 export default function PrelineScript() {
 	const path = usePathname();
-
 	useEffect(() => {
 		import("preline/preline");
 	}, []);
 
 	useEffect(() => {
 		setTimeout(() => {
-			HSStaticMethods.autoInit();
-		}, 100);
+			window.HSStaticMethods.autoInit();
+		}, 1000);
 	}, [path]);
 
 	return null;

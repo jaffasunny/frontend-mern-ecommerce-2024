@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import Spinners from "../Spinners";
 
-export default function isNotAuth(Component: any) {
+const isNotAuth = (Component: any) => {
 	return function isNotAuth(props: any) {
 		const auth = useAuthStore((state) => state.isAuthenticated);
 		const [hasHydrated, setHasHydrated] = useState(false);
@@ -25,4 +25,6 @@ export default function isNotAuth(Component: any) {
 
 		return !hasHydrated ? <Spinners /> : <Component {...props} />;
 	};
-}
+};
+
+export default isNotAuth;
