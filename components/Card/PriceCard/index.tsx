@@ -5,6 +5,7 @@ type Props = {
 		_id: string;
 		image: string;
 		productName: string;
+		price: number;
 	};
 };
 
@@ -26,7 +27,7 @@ const PriceCard = ({ data }: Props) => {
 					{data.productName || "T-SHIRT WITH TAPE DETAILS"}
 				</h3>
 				<p className='mt-1 text-black dark:text-black font-bold text-2xl'>
-					$120
+					${data.price || 50}
 				</p>
 			</div>
 		</div>

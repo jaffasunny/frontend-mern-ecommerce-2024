@@ -118,6 +118,7 @@ export type TGetProductAPI = {
 		_id: string;
 		image: string;
 		productName: string;
+		price: number;
 	}[];
 	message: string;
 	statusCode: number;

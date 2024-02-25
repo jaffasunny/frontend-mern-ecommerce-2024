@@ -30,90 +30,100 @@ const Cart = (props: Props) => {
 			setCartItems(cart?.data[0]?.items);
 			setTotalCartPrice(cart?.data[0]?.totalPrice);
 		}
-	}, [cart?.data[0]?.items]);
+	}, [cart?.data[0]?.items.length]);
 
-	const handleAddToCart = (
+	const handleAddToCart = async (
 		cartId: string,
 		productId: string,
 		quantity: number
 	) => {
-		const itemToUpdateIndex = cartItems.findIndex(
-			(item) => item._id === cartId
-		);
+		try {
+			const itemToUpdateIndex = cartItems.findIndex(
+				(item) => item._id === cartId
+			);
 
-		if (itemToUpdateIndex !== -1) {
-			if (
-				cartItems[itemToUpdateIndex].quantity <=
-				cartItems[itemToUpdateIndex].product.quantity
-			) {
-				const updatedItem = {
-					...cartItems[itemToUpdateIndex],
-					quantity: cartItems[itemToUpdateIndex].quantity + quantity,
-				};
+			if (itemToUpdateIndex !== -1) {
+				await AddToCart({ product: productId, quantity });
 
-				// Create a new array without the old item
-				const updatedState = [
-					...cartItems.slice(0, itemToUpdateIndex),
-					updatedItem,
-					...cartItems.slice(itemToUpdateIndex + 1),
-				];
+				if (
+					cartItems[itemToUpdateIndex].quantity <=
+					cartItems[itemToUpdateIndex].product.quantity
+				) {
+					const updatedItem = {
+						...cartItems[itemToUpdateIndex],
+						quantity: cartItems[itemToUpdateIndex].quantity + quantity,
+					};
 
-				// Update the state
-				setCartItems(updatedState);
-				setTotalCartPrice((prev) =>
-					Number(Number(prev + updatedItem.product.price).toFixed(2))
-				);
+					// Create a new array without the old item
+					const updatedState = [
+						...cartItems.slice(0, itemToUpdateIndex),
+						updatedItem,
+						...cartItems.slice(itemToUpdateIndex + 1),
+					];
+
+					// Update the state
+					setCartItems(updatedState);
+					setTotalCartPrice((prev) =>
+						Number(Number(prev + updatedItem.product.price).toFixed(2))
+					);
+				}
 			}
+		} catch (error) {
+			console.log(error);
 		}
-
-		AddToCart({ product: productId, quantity });
 	};
 
-	const handleRemoveFromCart = (cartId: string, productId: string) => {
-		const itemToUpdateIndex = cartItems.findIndex(
-			(item) => item._id === cartId
-		);
+	const handleRemoveFromCart = async (cartId: string, productId: string) => {
+		try {
+			const itemToUpdateIndex = cartItems.findIndex(
+				(item) => item._id === cartId
+			);
 
-		if (itemToUpdateIndex !== -1) {
-			if (
-				cartItems[itemToUpdateIndex].quantity <=
-					cartItems[itemToUpdateIndex].product.quantity &&
-				cartItems[itemToUpdateIndex].quantity > 1
-			) {
-				const updatedItem = {
-					...cartItems[itemToUpdateIndex],
-					quantity: cartItems[itemToUpdateIndex].quantity - 1,
-				};
+			if (itemToUpdateIndex !== -1) {
+				await SingleItemRemoveFromCart(productId);
 
-				// Create a new array without the old item
-				const updatedState = [
-					...cartItems.slice(0, itemToUpdateIndex),
-					updatedItem,
-					...cartItems.slice(itemToUpdateIndex + 1),
-				];
-				// Update the state
-				setCartItems(updatedState);
-				setTotalCartPrice((prev) =>
-					Number(Number(prev - updatedItem.product.price).toFixed(2))
-				);
-			} else {
-				// Create a new array without the old item
-				const updatedState = [
-					...cartItems.slice(0, itemToUpdateIndex),
-					...cartItems.slice(itemToUpdateIndex + 1),
-				];
-				// Update the state
-				setCartItems(updatedState);
-				setTotalCartPrice((prev) =>
-					Number(
-						Number(prev - cartItems[itemToUpdateIndex].product.price).toFixed(2)
-					)
-				);
+				if (
+					cartItems[itemToUpdateIndex].quantity <=
+						cartItems[itemToUpdateIndex].product.quantity &&
+					cartItems[itemToUpdateIndex].quantity > 1
+				) {
+					const updatedItem = {
+						...cartItems[itemToUpdateIndex],
+						quantity: cartItems[itemToUpdateIndex].quantity - 1,
+					};
+
+					// Create a new array without the old item
+					const updatedState = [
+						...cartItems.slice(0, itemToUpdateIndex),
+						updatedItem,
+						...cartItems.slice(itemToUpdateIndex + 1),
+					];
+					// Update the state
+					setCartItems(updatedState);
+					setTotalCartPrice((prev) =>
+						Number(Number(prev - updatedItem.product.price).toFixed(2))
+					);
+				} else {
+					// Create a new array without the old item
+					const updatedState = [
+						...cartItems.slice(0, itemToUpdateIndex),
+						...cartItems.slice(itemToUpdateIndex + 1),
+					];
+					// Update the state
+					setCartItems(updatedState);
+					setTotalCartPrice((prev) =>
+						Number(
+							Number(prev - cartItems[itemToUpdateIndex].product.price).toFixed(
+								2
+							)
+						)
+					);
+				}
 				DecreaseCartCount();
 			}
+		} catch (error) {
+			console.log(error);
 		}
-
-		SingleItemRemoveFromCart(productId);
 	};
 
 	return (

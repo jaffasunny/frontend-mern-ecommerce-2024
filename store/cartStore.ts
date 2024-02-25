@@ -71,6 +71,7 @@ export const useCartStore = create<CartState & CartAction>()(
 
 			removeItemFromCart: async (cartItemId) => {
 				try {
+					console.log("removing an item");
 					set({ processLoading: true, error: null });
 
 					let response = await RemoveItemFromCartApi(
@@ -78,19 +79,18 @@ export const useCartStore = create<CartState & CartAction>()(
 						cartItemId
 					);
 
-					if (response === "Network Error") {
-						set({
-							processLoading: false,
-							cart: null,
-							error: response,
-						});
-					} else {
+					if (response) {
 						set({
 							processLoading: false,
 							error: {},
 							apiResponse: response,
 						});
-						// get().getCart(); // update cart after adding new item to it
+					} else {
+						set({
+							processLoading: false,
+							cart: null,
+							error: response,
+						});
 					}
 				} catch (error) {
 					console.log({ error });

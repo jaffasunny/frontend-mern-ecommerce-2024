@@ -19,6 +19,7 @@ const NewArrivals = (props: Props) => {
 			_id: string;
 			image: string;
 			productName: string;
+			price: number;
 		}[]
 	>([]);
 	const [isLoading, setIsLoading] = useState(false);
