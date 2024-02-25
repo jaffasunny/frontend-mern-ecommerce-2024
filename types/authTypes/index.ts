@@ -20,6 +20,7 @@ export type TUserType = {
 		refreshToken: string;
 		user: object;
 	};
+
 	message: string;
 	statusCode: number | null;
 	success: boolean;
@@ -92,9 +93,13 @@ export interface LOGIN_API_TYPES {
 		emailOrUsername: string,
 		password: string
 	) => Promise<
-		| { accessToken: string; refreshToken: string; user: object }
+		| {
+				data: { accessToken: string; refreshToken: string; user: object };
+				message: string;
+				statusCode: number | null;
+				success: boolean;
+		  }
 		| undefined
-		| string
 	>;
 }
 

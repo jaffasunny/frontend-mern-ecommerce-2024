@@ -19,7 +19,28 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 
 					let response = await LoginAPI(emailOrUsername, password);
 
-					if (response === "Network Error") {
+					if (typeof response !== "string" && response) {
+						set({
+							loading: false,
+							//   user: {
+							//     data: {
+							//         accessToken: string;
+							//         refreshToken: string;
+							//         user: object;
+							//     };
+							//     message: string;
+							//     statusCode: number | null;
+							//     success: boolean;
+							// }
+							user: {
+								data: response.data,
+								message: response.message,
+								statusCode: response.statusCode,
+								success: response.success,
+							},
+							isAuthenticated: true,
+						});
+					} else {
 						set({
 							loading: false,
 							user: DEFAULT_VALUES.user,
@@ -28,12 +49,6 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 						});
 
 						return response;
-					} else if (typeof response !== "string" && response) {
-						set({
-							loading: false,
-							user: { ...get().user, data: response },
-							isAuthenticated: true,
-						});
 					}
 				} catch (error) {
 					set({ error: error || "An error occurred" });
