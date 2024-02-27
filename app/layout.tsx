@@ -3,6 +3,7 @@ import "./globals.css";
 
 import PrelineScript from "@/components/PrelineScript";
 import Script from "next/script";
+import ToastifyWrapper from "@/components/ToastifyWrapper";
 
 export const metadata: Metadata = {
 	title: "Chicify",
@@ -16,7 +17,9 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang='en' className='h-full'>
-			<body>{children}</body>
+			<body>
+				<ToastifyWrapper>{children}</ToastifyWrapper>
+			</body>
 			<PrelineScript />
 			<Script src='https://use.fontawesome.com/03f8a0ebd4.js' />
 			<Script

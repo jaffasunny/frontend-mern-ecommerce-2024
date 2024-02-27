@@ -2,7 +2,13 @@ import { DEFAULT_VALUES } from "./../utils/constant";
 import { create } from "zustand";
 import { AuthAction, AuthState } from "@/types";
 import { persist } from "zustand/middleware";
-import { LoginAPI, LogoutAPI, SignupAPI } from "@/utils/Apis";
+import {
+	LoginAPI,
+	LogoutAPI,
+	ResetPasswordToken,
+	SignupAPI,
+	ResetPassword,
+} from "@/utils/Apis";
 
 export const useAuthStore = create<AuthState & AuthAction>()(
 	persist(
@@ -22,16 +28,6 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 					if (typeof response !== "string" && response) {
 						set({
 							loading: false,
-							//   user: {
-							//     data: {
-							//         accessToken: string;
-							//         refreshToken: string;
-							//         user: object;
-							//     };
-							//     message: string;
-							//     statusCode: number | null;
-							//     success: boolean;
-							// }
 							user: {
 								data: response.data,
 								message: response.message,
@@ -137,6 +133,66 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 					}
 				} catch (error) {
 					console.log({ error });
+				}
+			},
+
+			resetPasswordToken: async (email: string) => {
+				try {
+					set({ loading: true, error: null });
+
+					let response = await ResetPasswordToken(email);
+
+					if (response) {
+						set({
+							loading: false,
+							apiResponse: response.data,
+						});
+					} else {
+						set({
+							loading: false,
+							error: response,
+						});
+					}
+				} catch (error) {
+					set({
+						loading: false,
+						error,
+					});
+				}
+			},
+
+			resetPassword: async (
+				password: string,
+				confirmPassword: string,
+				userId: string,
+				tokenId: string
+			) => {
+				try {
+					set({ loading: true, error: null });
+
+					let response = await ResetPassword(
+						password,
+						confirmPassword,
+						userId,
+						tokenId
+					);
+
+					if (response) {
+						set({
+							loading: false,
+							apiResponse: response.data,
+						});
+					} else {
+						set({
+							loading: false,
+							error: response,
+						});
+					}
+				} catch (error) {
+					set({
+						loading: false,
+						error,
+					});
 				}
 			},
 

@@ -30,8 +30,8 @@ export interface AuthState {
 	user: TUserType;
 	isAuthenticated: boolean;
 	loading: boolean;
-	error: null | string | object;
-	apiResponse: object | null;
+	error: null | string | object | unknown;
+	apiResponse: object | null | string;
 }
 
 export interface AuthAction {
@@ -55,6 +55,13 @@ export interface AuthAction {
 			  }
 			| object[]
 	) => void;
+	resetPasswordToken: (email: string) => Promise<void>;
+	resetPassword: (
+		password: string,
+		confirmPassword: string,
+		userId: string,
+		tokenId: string
+	) => Promise<void>;
 	clearApiResponse: () => void;
 }
 
@@ -168,6 +175,13 @@ export type TRefreshTokenResponse = {
 		accessToken: string;
 		refreshToken: string;
 	};
+	message: string;
+	success: boolean;
+};
+
+export type TResetPasswordTokenResponse = {
+	statusCode: number;
+	data: string;
 	message: string;
 	success: boolean;
 };

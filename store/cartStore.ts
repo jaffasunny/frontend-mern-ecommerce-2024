@@ -71,7 +71,6 @@ export const useCartStore = create<CartState & CartAction>()(
 
 			removeItemFromCart: async (cartItemId) => {
 				try {
-					console.log("removing an item");
 					set({ processLoading: true, error: null });
 
 					let response = await RemoveItemFromCartApi(

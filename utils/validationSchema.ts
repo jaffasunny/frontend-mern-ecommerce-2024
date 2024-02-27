@@ -27,3 +27,16 @@ export const signupSchema = Yup.object({
 		"You must accept the terms and conditions."
 	),
 });
+
+export const forgetPasswordTokenSchema = Yup.object({
+	email: Yup.string().required("Required"),
+});
+
+export const resetPasswordSchema = Yup.object({
+	password: Yup.string()
+		.min(8, "Password must be of Minimum 8 characters")
+		.required("Password is Required"),
+	confirmPassword: Yup.string()
+		.required("Confirm password is required")
+		.oneOf([Yup.ref("password")], "Passwords must match"),
+});

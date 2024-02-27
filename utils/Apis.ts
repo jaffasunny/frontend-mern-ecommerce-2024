@@ -104,6 +104,49 @@ export const SignupAPI: SIGNUP_API_TYPES["fnType"] = async (
 	}
 };
 
+export const ResetPasswordToken = async (email: string) => {
+	try {
+		const response = await axios.post(
+			DEV_BASE_URL + "/users/reset-password",
+			{ email },
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+			}
+		);
+
+		return response.data;
+	} catch (error: any) {
+		return error;
+	}
+};
+
+export const ResetPassword = async (
+	password: string,
+	confirmPassword: string,
+	userId: string,
+	tokenId: string
+) => {
+	try {
+		const response = await axios.post(
+			DEV_BASE_URL + `/users/reset-password/${userId}/${tokenId}`,
+			{ password, confirmPassword },
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+			}
+		);
+
+		return response.data;
+	} catch (error: any) {
+		return error;
+	}
+};
+
 export const GetProductAPI = async (user: TUserType) => {
 	try {
 		const response = await axios.get<TGetProductAPI>(

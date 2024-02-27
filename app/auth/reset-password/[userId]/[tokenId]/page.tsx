@@ -10,23 +10,41 @@ import IconButton from "@/components/Button/IconButton";
 import TextLabelRadioInput from "@/components/Inputs/TextLabelRadioInput";
 import SimpleButton from "@/components/Button/SimpleButton";
 import { Formik } from "formik";
-import { loginSchema } from "@/utils/validationSchema";
+import { resetPasswordSchema } from "@/utils/validationSchema";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
 
-const Login = () => {
-	const loginApi = useAuthStore((state) => state.login);
+type handleSubmit = (
+	password: string,
+	confirmPassword: string
+) => Promise<void>;
+
+const ResetPassword2 = () => {
+	const resetPassword = useAuthStore((state) => state.resetPassword);
+	const apiResponse = useAuthStore((state) => state.apiResponse);
+	const clearApiResponse = useAuthStore((state) => state.clearApiResponse);
 	const isLoading = useAuthStore((state) => state.loading);
 	const isError = useAuthStore((state) => state.error);
+	const { userId, tokenId } = useParams();
 
-	const handleSubmit: LoginTypes["HandleSubmitType"] = async (
-		emailOrUsername,
-		password
-	) => {
+	const handleSubmit: handleSubmit = async (password, confirmPassword) => {
 		try {
-			await loginApi(emailOrUsername, password);
+			await resetPassword(password, confirmPassword, userId, tokenId);
 		} catch (error) {
 			console.log({ error });
 		}
 	};
+
+	useEffect(() => {
+		if (typeof apiResponse === "string") {
+			toast(apiResponse);
+		}
+	}, [apiResponse]);
+
+	useEffect(() => {
+		clearApiResponse();
+	}, []);
 
 	return (
 		<div className='dark:bg-slate-900 bg-gray-100 flex min-h-screen h-full items-center'>
@@ -35,41 +53,24 @@ const Login = () => {
 					<div className='p-4 sm:p-7'>
 						<div className='text-center'>
 							<h1 className='font-integralCF block text-2xl font-bold text-gray-800 dark:text-white'>
-								Sign in
+								New Password
 							</h1>
 							<p className='mt-2 text-sm text-gray-600 dark:text-gray-400'>
-								Don't have an account yet?{" "}
-								<Link
-									className='text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'
-									href='/auth/signup'>
-									Sign up here
-								</Link>
+								Enter your new password
 							</p>
 						</div>
 
 						<div className='mt-5'>
-							<IconButton
-								icon={<GoogleSvg className='w-4 h-auto' />}
-								text='Sign in with Google'
-							/>
-
-							<div className='py-3 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:me-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600'>
-								Or
-							</div>
-
 							<Formik
-								initialValues={
-									{
-										emailOrUsername: "",
-										password: "",
-										radioButton: false,
-									} as LoginTypes["FormValueType"]
-								}
-								validationSchema={loginSchema}
+								initialValues={{
+									password: "",
+									confirmPassword: "",
+								}}
+								validationSchema={resetPasswordSchema}
 								onSubmit={(values, { setSubmitting }) => {
 									setTimeout(async () => {
 										setSubmitting(false);
-										await handleSubmit(values.emailOrUsername, values.password);
+										await handleSubmit(values.password, values.confirmPassword);
 									}, 400);
 								}}>
 								{({
@@ -83,21 +84,8 @@ const Login = () => {
 								}) => (
 									<form onSubmit={handleSubmit} className='grid gap-y-4'>
 										<TextLabelInput
-											name='emailOrUsername'
-											title='email or username'
-											onBlur={handleBlur}
-											value={values.emailOrUsername}
-											handleChange={handleChange}
-											errors={
-												errors.emailOrUsername &&
-												touched.emailOrUsername &&
-												errors.emailOrUsername
-											}
-										/>
-
-										<TextLabelInput
 											name='password'
-											title='password'
+											title='Password'
 											inputType='password'
 											onBlur={handleBlur}
 											value={values.password}
@@ -106,20 +94,26 @@ const Login = () => {
 												errors.password && touched.password && errors.password
 											}
 										/>
-
-										<span className='flex justify-end'>
-											<Link
-												className='text-blue-600 text-sm decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'
-												href='/auth/reset-password'>
-												Forgot Password?
-											</Link>
-										</span>
+										<TextLabelInput
+											name='confirmPassword'
+											title='Confirm Password'
+											inputType='password'
+											onBlur={handleBlur}
+											value={values.confirmPassword}
+											handleChange={handleChange}
+											errors={
+												errors.confirmPassword &&
+												touched.confirmPassword &&
+												errors.confirmPassword
+											}
+										/>
 
 										<SimpleButton
 											type='submit'
-											title='Sign in'
+											title='Save'
 											disabled={isSubmitting}
 											isLoading={isLoading}
+											buttonStyles='flex justify-self-end'
 										/>
 									</form>
 								)}
@@ -132,4 +126,4 @@ const Login = () => {
 	);
 };
 
-export default isAuth(Login);
+export default isAuth(ResetPassword2);
