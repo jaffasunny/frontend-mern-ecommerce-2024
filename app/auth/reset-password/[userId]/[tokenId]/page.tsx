@@ -28,9 +28,13 @@ const ResetPassword2 = () => {
 	const isError = useAuthStore((state) => state.error);
 	const { userId, tokenId } = useParams();
 
+	// type assertion
+	let _userId = userId as string;
+	let _tokenId = tokenId as string;
+
 	const handleSubmit: handleSubmit = async (password, confirmPassword) => {
 		try {
-			await resetPassword(password, confirmPassword, userId, tokenId);
+			await resetPassword(password, confirmPassword, _userId, _tokenId);
 		} catch (error) {
 			console.log({ error });
 		}

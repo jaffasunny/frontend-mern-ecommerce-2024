@@ -161,12 +161,7 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 				}
 			},
 
-			resetPassword: async (
-				password: string,
-				confirmPassword: string,
-				userId: string,
-				tokenId: string
-			) => {
+			resetPassword: async (password, confirmPassword, userId, tokenId) => {
 				try {
 					set({ loading: true, error: null });
 
