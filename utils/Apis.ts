@@ -107,7 +107,7 @@ export const SignupAPI: SIGNUP_API_TYPES["fnType"] = async (
 export const ResetPasswordToken = async (email: string) => {
 	try {
 		const response = await axios.post(
-			DEV_BASE_URL + "/users/reset-password",
+			PROD_BASE_URL + "/users/reset-password",
 			{ email },
 			{
 				headers: {
@@ -131,7 +131,7 @@ export const ResetPassword = async (
 ) => {
 	try {
 		const response = await axios.post(
-			DEV_BASE_URL + `/users/reset-password/${userId}/${tokenId}`,
+			PROD_BASE_URL + `/users/reset-password/${userId}/${tokenId}`,
 			{ password, confirmPassword },
 			{
 				headers: {
