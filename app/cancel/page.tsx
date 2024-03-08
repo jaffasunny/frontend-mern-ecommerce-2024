@@ -1,4 +1,3 @@
-import isAuth from "@/components/Auth/IsAuth";
 import withHeaderFooter from "@/components/HOC/withHeaderFooter";
 
 const cancel = () => {
@@ -17,4 +16,4 @@ const cancel = () => {
 	);
 };
 
-export default isAuth(withHeaderFooter(cancel));
+export default withHeaderFooter(cancel) as React.FC;
