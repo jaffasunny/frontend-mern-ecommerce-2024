@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect } from "react";
 import SearchInput from "@/components/Inputs/SearchInput";
 import LogoutIcon from "@/public/icons/logoutIcon.svg";
