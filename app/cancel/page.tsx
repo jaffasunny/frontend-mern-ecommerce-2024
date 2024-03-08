@@ -1,3 +1,6 @@
+import isAuth from "@/components/Auth/IsAuth";
+import withHeaderFooter from "@/components/HOC/withHeaderFooter";
+
 const cancel = () => {
 	return (
 		<>
@@ -14,4 +17,4 @@ const cancel = () => {
 	);
 };
 
-export default cancel;
+export default isAuth(withHeaderFooter(cancel));

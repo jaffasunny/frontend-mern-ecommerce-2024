@@ -16,7 +16,7 @@ export const LoginAPI: LOGIN_API_TYPES["fnType"] = async (
 ) => {
 	try {
 		const response = await axios.post(
-			PROD_BASE_URL + "/users/login",
+			DEV_BASE_URL + "/users/login",
 			{
 				emailOrUsername,
 				password,
@@ -38,7 +38,7 @@ export const LoginAPI: LOGIN_API_TYPES["fnType"] = async (
 export const RefreshAccessTokenAPI = async (user: TUserType) => {
 	try {
 		const response = await axios.post<TRefreshTokenResponse>(
-			PROD_BASE_URL + "/users/refreshToken",
+			DEV_BASE_URL + "/users/refreshToken",
 			{
 				refreshToken: user?.data?.refreshToken,
 			},
@@ -59,7 +59,7 @@ export const RefreshAccessTokenAPI = async (user: TUserType) => {
 
 export const LogoutAPI = async (user: TUserType) => {
 	try {
-		const response = await axios.post(PROD_BASE_URL + "/users/logout", {
+		const response = await axios.post(DEV_BASE_URL + "/users/logout", {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
@@ -82,7 +82,7 @@ export const SignupAPI: SIGNUP_API_TYPES["fnType"] = async (
 ) => {
 	try {
 		const response = await axios.post(
-			PROD_BASE_URL + "/users/register",
+			DEV_BASE_URL + "/users/register",
 			{
 				firstName,
 				lastName,
@@ -107,7 +107,7 @@ export const SignupAPI: SIGNUP_API_TYPES["fnType"] = async (
 export const ResetPasswordToken = async (email: string) => {
 	try {
 		const response = await axios.post(
-			PROD_BASE_URL + "/users/reset-password",
+			DEV_BASE_URL + "/users/reset-password",
 			{ email },
 			{
 				headers: {
@@ -131,7 +131,7 @@ export const ResetPassword = async (
 ) => {
 	try {
 		const response = await axios.post(
-			PROD_BASE_URL + `/users/reset-password/${userId}/${tokenId}`,
+			DEV_BASE_URL + `/users/reset-password/${userId}/${tokenId}`,
 			{ password, confirmPassword },
 			{
 				headers: {
@@ -150,7 +150,7 @@ export const ResetPassword = async (
 export const GetProductAPI = async (user: TUserType) => {
 	try {
 		const response = await axios.get<TGetProductAPI>(
-			PROD_BASE_URL + "/products",
+			DEV_BASE_URL + "/products",
 			{
 				headers: {
 					"Content-Type": "application/json",
@@ -177,7 +177,7 @@ export const GetSingleProductAPI = async (
 ) => {
 	try {
 		const response = await axios.get<TGetSingleProductAPI>(
-			PROD_BASE_URL + `/products/${id}`,
+			DEV_BASE_URL + `/products/${id}`,
 			{
 				headers: {
 					"Content-Type": "application/json",
@@ -200,7 +200,7 @@ export const GetSingleProductAPI = async (
 
 export const GetCartAPI = async (user: TUserType) => {
 	try {
-		const response = await axios.get(PROD_BASE_URL + "/carts", {
+		const response = await axios.get(DEV_BASE_URL + "/carts", {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
@@ -224,7 +224,7 @@ export const AddToCartAPI = async (
 	body: TAddToCartAPIBody
 ) => {
 	try {
-		const response = await axios.post(PROD_BASE_URL + "/carts", body, {
+		const response = await axios.post(DEV_BASE_URL + "/carts", body, {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
@@ -248,16 +248,13 @@ export const RemoveItemFromCartApi = async (
 	cartItemId: string
 ) => {
 	try {
-		const response = await axios.delete(
-			PROD_BASE_URL + "/carts/" + cartItemId,
-			{
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/json",
-					Authorization: `Bearer ${user.data.accessToken}`,
-				},
-			}
-		);
+		const response = await axios.delete(DEV_BASE_URL + "/carts/" + cartItemId, {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.accessToken}`,
+			},
+		});
 
 		return response.data;
 	} catch (error: any) {
@@ -272,7 +269,7 @@ export const RemoveItemFromCartApi = async (
 
 export const ClearCartApi = async (user: TUserType) => {
 	try {
-		const response = await axios.get(PROD_BASE_URL + "/carts/clearCart", {
+		const response = await axios.get(DEV_BASE_URL + "/carts/clearCart", {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
@@ -298,7 +295,7 @@ export const CreateOrderApi = async (
 	body: { cart: string }
 ) => {
 	try {
-		const response = await axios.post(PROD_BASE_URL + "/orders", body, {
+		const response = await axios.post(DEV_BASE_URL + "/orders", body, {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
@@ -320,7 +317,7 @@ export const CreateOrderApi = async (
 
 export const GetOrderAPI = async (user: TUserType) => {
 	try {
-		const response = await axios.get(PROD_BASE_URL + "/orders", {
+		const response = await axios.get(DEV_BASE_URL + "/orders", {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
@@ -341,7 +338,7 @@ export const GetOrderAPI = async (user: TUserType) => {
 
 export const OrderPaymentApi = async (user: TUserType) => {
 	try {
-		const response = await axios.get(PROD_BASE_URL + "/checkout", {
+		const response = await axios.get(DEV_BASE_URL + "/checkout", {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
@@ -366,7 +363,7 @@ export const ChangeOrderStatus = async (
 ) => {
 	try {
 		const response = await axios.patch(
-			PROD_BASE_URL + "/orders/changeOrderStatus",
+			DEV_BASE_URL + "/orders/changeOrderStatus",
 			body,
 			{
 				headers: {
@@ -391,7 +388,7 @@ export const ChangeOrderStatus = async (
 export const ClearPendingOrder = async (user: TUserType) => {
 	try {
 		const response = await axios.get(
-			PROD_BASE_URL + "/orders/clearPendingOrder",
+			DEV_BASE_URL + "/orders/clearPendingOrder",
 			{
 				headers: {
 					"Content-Type": "application/json",

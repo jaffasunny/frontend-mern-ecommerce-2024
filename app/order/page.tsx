@@ -87,25 +87,25 @@ const Order = (props: Props) => {
 							Your Order
 						</h1>
 
-						<section className='flex gap-2 justify-between mt-4'>
+						<section className='flex gap-2 justify-between md:flex-row flex-col mt-4'>
 							{/* LEFT SECTION */}
-							<section className='w-3/5 rounded-2xl border border-black/10 px-3 py-2 bg-white'>
+							<section className='md:w-3/5 w-full rounded-2xl border border-black/10 px-3 py-2 bg-white'>
 								{order?.data.map((order) =>
 									order.status === "pending"
 										? order?.cart.items.map(({ product, quantity, _id }) => (
 												<section className='p-3'>
-													<div className='flex justify-between h-32'>
-														<span className='bg-[#F2F0F1] w-32 h-32 p-2 rounded-lg'>
+													<div className='flex justify-between sm:flex-row sm:gap-0 gap-3 flex-col sm:h-32'>
+														<span className='bg-[#F2F0F1] w-32 h-32 p-2 rounded-lg sm:self-auto self-center'>
 															<img
 																src={product.image || ""}
 																alt={"xyz"}
-																className='w-11/12 h-11/12 object-contain mix-blend-multiply'
+																className='md:w-11/12 md:h-11/12 w-full h-full object-contain mix-blend-multiply'
 															/>
 														</span>
 														<div className='w-full h-full ml-2'>
 															<div className='flex h-full justify-between'>
 																<div className='flex flex-col justify-between h-full'>
-																	<h2 className='font-satoshi font-bold text-xl text-black'>
+																	<h2 className='font-satoshi font-bold xl:text-xl lg:text-lg sm:text-base text-sm text-black'>
 																		{product.productName || "Product Name"}
 																	</h2>
 
@@ -113,10 +113,10 @@ const Order = (props: Props) => {
 																		${product.price || 0}
 																	</p>
 																</div>
-																<div className='flex flex-col justify-between items-end h-full'>
-																	<div className='bg-[#F0F0F0] font-satoshi rounded-2xl w-32 flex justify-between items-center'>
-																		<span className='text-xl text-black w-2/6 text-center'>
-																			Quantity {quantity || 0}
+																<div className='flex flex-col self-end items-end h-full'>
+																	<div className='bg-[#F0F0F0] font-satoshi rounded-2xl w-32 flex justify-center items-center'>
+																		<span className='text-xl text-black text-center'>
+																			Quantity: {quantity || 0}
 																		</span>
 																	</div>
 																</div>
@@ -131,7 +131,7 @@ const Order = (props: Props) => {
 							</section>
 
 							{/* RIGHT SECTION */}
-							<section className='w-2/5 rounded-2xl border border-black/10 px-6 py-5 bg-white h-1/2'>
+							<section className='md:w-2/5 w-full rounded-2xl border border-black/10 px-6 py-5 bg-white h-1/2'>
 								<h2 className='font-satoshi font-bold text-2xl text-black'>
 									Cart Summary
 								</h2>
