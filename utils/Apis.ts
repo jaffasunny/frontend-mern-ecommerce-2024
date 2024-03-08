@@ -269,3 +269,144 @@ export const RemoveItemFromCartApi = async (
 		console.log(error);
 	}
 };
+
+export const ClearCartApi = async (user: TUserType) => {
+	try {
+		const response = await axios.get(PROD_BASE_URL + "/carts/clearCart", {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.accessToken}`,
+			},
+		});
+
+		return response.data;
+	} catch (error: any) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+		console.log(error);
+	}
+};
+
+// Order Apis
+
+export const CreateOrderApi = async (
+	user: TUserType,
+	body: { cart: string }
+) => {
+	try {
+		const response = await axios.post(PROD_BASE_URL + "/orders", body, {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.accessToken}`,
+			},
+		});
+
+		return response.data;
+	} catch (error: any) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+		console.log(error);
+	}
+};
+
+export const GetOrderAPI = async (user: TUserType) => {
+	try {
+		const response = await axios.get(PROD_BASE_URL + "/orders", {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.accessToken}`,
+			},
+		});
+
+		return response.data;
+	} catch (error: any) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+		console.log(error);
+	}
+};
+
+export const OrderPaymentApi = async (user: TUserType) => {
+	try {
+		const response = await axios.get(PROD_BASE_URL + "/checkout", {
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: `Bearer ${user.data.accessToken}`,
+			},
+		});
+
+		return response.data;
+	} catch (error: any) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+		console.log(error);
+	}
+};
+
+export const ChangeOrderStatus = async (
+	user: TUserType,
+	body: { orderId: string; status: string }
+) => {
+	try {
+		const response = await axios.patch(
+			PROD_BASE_URL + "/orders/changeOrderStatus",
+			body,
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+					Authorization: `Bearer ${user.data.accessToken}`,
+				},
+			}
+		);
+
+		return response.data;
+	} catch (error: any) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+		console.log(error);
+	}
+};
+
+export const ClearPendingOrder = async (user: TUserType) => {
+	try {
+		const response = await axios.get(
+			PROD_BASE_URL + "/orders/clearPendingOrder",
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+					Authorization: `Bearer ${user.data.accessToken}`,
+				},
+			}
+		);
+
+		return response.data;
+	} catch (error: any) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+		console.log(error);
+	}
+};

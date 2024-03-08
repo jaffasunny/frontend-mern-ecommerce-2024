@@ -11,11 +11,16 @@ import ForwardArrow from "@/public/icons/ForwardArrow.svg";
 import { TItemType } from "@/types";
 import EmptyCartGif from "@/public/gifs/emptyCartGif.gif";
 import Image from "next/image";
+import Link from "next/link";
+import { useOrderStore } from "@/store/orderStore";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
 
 type Props = {};
 
 const Cart = (props: Props) => {
 	const cart = useCartStore((state) => state.cart);
+	const clearPendingOrders = useOrderStore((state) => state.clearPendingOrder);
 	const DecreaseCartCount = useCartStore((state) => state.decreaseCartCount);
 	const isLoading = useCartStore((state) => state.loading);
 	const AddToCart = useCartStore((state) => state.addToCart);
@@ -25,12 +30,20 @@ const Cart = (props: Props) => {
 	const [cartItems, setCartItems] = useState<TItemType[]>([]);
 	const [totalCartPrice, setTotalCartPrice] = useState(0);
 
+	const router = useRouter();
+
+	const AddOrder = useOrderStore((state) => state.addOrder);
+
 	useEffect(() => {
 		if (cart?.data[0].items) {
 			setCartItems(cart?.data[0]?.items);
 			setTotalCartPrice(cart?.data[0]?.totalPrice);
 		}
 	}, [cart?.data[0]?.items.length]);
+
+	useEffect(() => {
+		clearPendingOrders(useAuthStore.getState().user);
+	}, []);
 
 	const handleAddToCart = async (
 		cartId: string,
@@ -126,6 +139,17 @@ const Cart = (props: Props) => {
 		}
 	};
 
+	const handleAddOrder = () => {
+		try {
+			console.log("cart?.data[0]._id", cart?.data[0]._id);
+			AddOrder({ cart: cart?.data[0]._id })
+				.then((res) => router.replace("/order"))
+				.catch((err) => console.log({ err }));
+		} catch (error) {
+			console.log({ error });
+		}
+	};
+
 	return (
 		<section className='text-gray-600 body-font overflow-hidden'>
 			<div className='container px-5 py-10 mx-auto'>
@@ -197,7 +221,7 @@ const Cart = (props: Props) => {
 							{/* RIGHT SECTION */}
 							<section className='w-2/5 rounded-2xl border border-black/10 px-6 py-5 bg-white h-1/2'>
 								<h2 className='font-satoshi font-bold text-2xl text-black'>
-									Order Summary
+									Cart Summary
 								</h2>
 
 								{/* <div className='flex justify-between items-center mt-5'>
@@ -223,8 +247,9 @@ const Cart = (props: Props) => {
 								<IconButton
 									endIcon={<ForwardArrow />}
 									text='Go to Checkout'
-									buttonStyles='bg-black !rounded-3xl mt-5'
+									buttonStyles='!bg-black !rounded-3xl mt-5'
 									textStyles='text-white font-satoshi text-base font-medium'
+									onClick={handleAddOrder}
 								/>
 							</section>
 						</section>

@@ -17,6 +17,7 @@ export type TItemType = {
 		updatedAt: Date;
 		__v: number;
 	};
+	totalPrice: number;
 	quantity: number;
 	_id: string;
 };

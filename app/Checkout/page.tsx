@@ -2,7 +2,11 @@
 
 import { loadStripe, Stripe, StripeError } from "@stripe/stripe-js";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useOrderStore } from "@/store/orderStore";
+import withHeaderFooter from "@/components/HOC/withHeaderFooter";
+import isNotAuth from "@/components/Auth/isNotAuth";
+import { useAuthStore } from "@/store/authStore";
+import { useParams, useSearchParams } from "next/navigation";
 
 interface Product {
 	name: string;
@@ -20,7 +24,11 @@ interface SessionResponse {
 }
 
 const Checkout = () => {
-	const router = useRouter();
+	const order = useOrderStore((state) => state.order);
+	const user = useAuthStore((state) => state.user);
+	const searchParams = useSearchParams();
+
+	const orderId = searchParams.get("orderId");
 
 	const [product, setProduct] = useState<Product>({
 		name: "Go FullStack with KnowledgeHut",
@@ -35,9 +43,14 @@ const Checkout = () => {
 		const stripe = await loadStripe(
 			process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 		);
-		const body: { product: Product } = { product };
+		// const body: { product: Product } = { product };
+		const body = order?.data.map((order) =>
+			order.status === "pending" ? { product: order?.cart, orderId } : ""
+		)[0];
 		const headers = {
 			"Content-Type": "application/json",
+			Accept: "application/json",
+			Authorization: `Bearer ${user.data.accessToken}`,
 		};
 
 		const response = await fetch("http://localhost:8000/api/v1/checkout", {
@@ -61,15 +74,8 @@ const Checkout = () => {
 			?.redirectToCheckout({
 				sessionId: session.data.id,
 			})
-			.then((res) => router.push("/success"))
-			.catch((error) => router.push("/cancel"));
-
-		// if (result.error) {
-		// 	console.log((result as any).error?.message);
-		// 	router.push("/cancel");
-		// } else {
-		// 	router.push("/success");
-		// }
+			.then((res) => console.log(res))
+			.catch((error) => console.log(error));
 	};
 
 	return (
@@ -96,4 +102,4 @@ const Checkout = () => {
 	);
 };
 
-export default Checkout;
+export default isNotAuth(withHeaderFooter(Checkout));
