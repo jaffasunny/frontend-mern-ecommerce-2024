@@ -4,7 +4,6 @@ import { ChangeOrderStatus, ClearCartApi } from "@/utils/Apis";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import withHeaderFooter from "@/components/HOC/withHeaderFooter";
-import isAuth from "@/components/Auth/IsAuth";
 
 const Success = () => {
 	const searchParams = useSearchParams();
@@ -39,4 +38,4 @@ const Success = () => {
 	);
 };
 
-export default withHeaderFooter(Success);
+export default withHeaderFooter(Success) as React.FC;
