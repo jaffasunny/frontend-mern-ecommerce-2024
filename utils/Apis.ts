@@ -305,6 +305,7 @@ export const CreateOrderApi = async (
 				Authorization: `Bearer ${user.data.accessToken}`,
 			},
 		});
+		console.log("🚀 ~ response:", response);
 
 		return response.data;
 	} catch (error: any) {

@@ -10,11 +10,21 @@ import EmptyCartGif from "@/public/gifs/emptyCartGif.gif";
 import Image from "next/image";
 import Link from "next/link";
 import { useOrderStore } from "@/store/orderStore";
+import { loadStripe, Stripe, StripeError } from "@stripe/stripe-js";
+import { useAuthStore } from "@/store/authStore";
 
 type Props = {};
 
+interface SessionResponse {
+	data: {
+		id: string;
+	};
+	error: StripeError;
+}
+
 const Order = (props: Props) => {
 	const order = useOrderStore((state) => state.order);
+	const user = useAuthStore((state) => state.user);
 	const getOrder = useOrderStore((state) => state.getOrder);
 	const isLoading = useOrderStore((state) => state.loading);
 
@@ -23,6 +33,48 @@ const Order = (props: Props) => {
 	useEffect(() => {
 		getOrder();
 	}, []);
+
+	const makePayment = async () => {
+		const stripe = await loadStripe(
+			process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+		);
+		// const body: { product: Product } = { product };
+		const pendingOrder = order?.data.filter(
+			(order) => order.status === "pending"
+		)[0];
+		const body = { orderId: pendingOrder?._id, product: pendingOrder?.cart };
+
+		console.log("🚀 ~ makePayment ~ body:", body);
+		const headers = {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+			Authorization: `Bearer ${user.data.accessToken}`,
+		};
+
+		const response = await fetch("http://localhost:8000/api/v1/checkout", {
+			method: "POST",
+			headers: headers,
+			body: JSON.stringify(body),
+		});
+
+		if (!response.ok) {
+			throw new Error(
+				"Failed to create checkout session: " + response.statusText
+			);
+		}
+
+		const session: SessionResponse = await response.json();
+
+		console.log({ res: session });
+		console.log({ id: session.data.id });
+
+		stripe
+			?.redirectToCheckout({
+				sessionId: session.data.id,
+			})
+			.then((res) => console.log(res))
+			.catch((error) => console.log(error));
+	};
 
 	return (
 		<section className='text-gray-600 body-font overflow-hidden'>
@@ -106,20 +158,21 @@ const Order = (props: Props) => {
 									</p>
 								</div>
 
-								<Link
+								{/* <Link
 									href={{
 										pathname: `/checkout`,
 										query: {
 											orderId: pendingOrderId && pendingOrderId[0], // should be `title` not `id`
 										},
-									}}>
-									<IconButton
-										endIcon={<ForwardArrow />}
-										text='Add Payment'
-										buttonStyles='!bg-black !rounded-3xl mt-5'
-										textStyles='text-white font-satoshi text-base font-medium'
-									/>
-								</Link>
+									}}> */}
+								<IconButton
+									endIcon={<ForwardArrow />}
+									text='Add Payment'
+									buttonStyles='!bg-black !rounded-3xl mt-5'
+									textStyles='text-white font-satoshi text-base font-medium'
+									onClick={makePayment}
+								/>
+								{/* </Link> */}
 							</section>
 						</section>
 					</>
