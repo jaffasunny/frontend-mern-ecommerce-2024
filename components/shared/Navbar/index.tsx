@@ -197,11 +197,11 @@ const Navbar = (props: Props) => {
 								</span>
 							) : null}
 						</Link>
-						<a
+						<Link
 							className='flex items-center font-regular text-sm text-gray-500 hover:text-blue-600 md:my-6 md:ps-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500'
-							href='#'>
+							href='/profile'>
 							<ProfileIcon className='text-lg w-4 h-4' />
-						</a>
+						</Link>
 						<button
 							className='flex items-center font-regular text-sm text-gray-500 hover:text-blue-600 md:my-6 md:ps-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500'
 							onClick={handleLogout}>

@@ -18,7 +18,17 @@ export type TUserType = {
 	data: {
 		accessToken: string;
 		refreshToken: string;
-		user: object;
+		user:
+			| object
+			| {
+					email: string;
+					firstName: string;
+					lastName: string;
+					username: string;
+					phone?: string;
+					gender?: string;
+					bio?: string;
+			  };
 	};
 
 	message: string;
@@ -33,6 +43,15 @@ export interface AuthState {
 	error: null | string | object | unknown;
 	apiResponse: object | null | string;
 }
+
+export type TEditProfileBody = {
+	firstName: string;
+	lastName: string;
+	email?: string;
+	phoneNumber?: string;
+	gender: string;
+	dateOfBirth?: Date;
+};
 
 export interface AuthAction {
 	login: (
@@ -63,6 +82,7 @@ export interface AuthAction {
 		tokenId: string
 	) => Promise<void>;
 	clearApiResponse: () => void;
+	updateUserProfile: (body: TEditProfileBody) => void;
 }
 
 export interface LoginTypes {

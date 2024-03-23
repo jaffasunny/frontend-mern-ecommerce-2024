@@ -7,7 +7,12 @@ export const DEFAULT_VALUES = {
 		data: {
 			accessToken: "",
 			refreshToken: "",
-			user: {},
+			user: {
+				email: "",
+				firstName: "",
+				lastName: "",
+				username: "",
+			},
 		},
 		message: "",
 		statusCode: null,

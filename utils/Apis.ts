@@ -2,6 +2,7 @@ import {
 	LOGIN_API_TYPES,
 	SIGNUP_API_TYPES,
 	TAddToCartAPIBody,
+	TEditProfileBody,
 	TGetProductAPI,
 	TGetSingleProductAPI,
 	TRefreshTokenResponse,
@@ -145,6 +146,18 @@ export const ResetPassword = async (
 		return response.data;
 	} catch (error: any) {
 		return error;
+	}
+};
+
+export const EditProfile = async (user: TUserType, body: TEditProfileBody) => {
+	try {
+	} catch (error: any) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+		console.log(error);
 	}
 };
 

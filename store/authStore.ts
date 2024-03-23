@@ -1,3 +1,4 @@
+import { TEditProfileBody } from "./../types/authTypes/index";
 import { DEFAULT_VALUES } from "./../utils/constant";
 import { create } from "zustand";
 import { AuthAction, AuthState } from "@/types";
@@ -8,6 +9,7 @@ import {
 	ResetPasswordToken,
 	SignupAPI,
 	ResetPassword,
+	EditProfile,
 } from "@/utils/Apis";
 
 export const useAuthStore = create<AuthState & AuthAction>()(
@@ -188,6 +190,16 @@ export const useAuthStore = create<AuthState & AuthAction>()(
 						loading: false,
 						error,
 					});
+				}
+			},
+
+			updateUserProfile: async (body: TEditProfileBody) => {
+				try {
+					set({ loading: true, error: null });
+
+					let response = await EditProfile(get().user, body);
+				} catch (error) {
+					set({ error: error || "An error occurred" });
 				}
 			},
 
