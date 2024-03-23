@@ -1,4 +1,7 @@
-import { RemoveItemFromCartApi } from "./../utils/Apis";
+import {
+	CompletelyRemoveItemFromCart,
+	RemoveItemFromCartApi,
+} from "./../utils/Apis";
 import { useAuthStore } from "@/store/authStore";
 import { DEFAULT_VALUES } from "./../utils/constant";
 import { create } from "zustand";
@@ -36,7 +39,7 @@ export const useCartStore = create<CartState & CartAction>()(
 								loading: false,
 								cart: response,
 								error: {},
-								cartCount: response?.data[0]?.items.length,
+								cartCount: response?.data[0]?.items.length || 0,
 							});
 						}
 					}
@@ -62,6 +65,7 @@ export const useCartStore = create<CartState & CartAction>()(
 							processLoading: false,
 							error: {},
 							apiResponse: response,
+							cartCount: response?.data?.items?.length,
 						});
 					}
 				} catch (error) {
@@ -102,6 +106,36 @@ export const useCartStore = create<CartState & CartAction>()(
 
 			increaseCartCount: () => set({ cartCount: get().cartCount + 1 }),
 			decreaseCartCount: () => set({ cartCount: get().cartCount - 1 }),
+			compeletelyRemoveItem: async (itemId: string, cartItemId: string) => {
+				try {
+					set({ error: null });
+
+					let response = await CompletelyRemoveItemFromCart(
+						useAuthStore.getState().user,
+						itemId,
+						cartItemId
+					);
+
+					if (response) {
+						set({
+							processLoading: false,
+							error: {},
+							apiResponse: response,
+						});
+					} else {
+						set({
+							processLoading: false,
+							cart: null,
+							error: response,
+						});
+					}
+				} catch (error) {
+					console.log({ error });
+					set({
+						error: error,
+					});
+				}
+			},
 			setCartCount: (count) => set({ cartCount: count }),
 
 			clearApiResponse: () => set({ apiResponse: null }),

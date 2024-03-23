@@ -44,7 +44,6 @@ const Order = (props: Props) => {
 		)[0];
 		const body = { orderId: pendingOrder?._id, product: pendingOrder?.cart };
 
-		console.log("🚀 ~ makePayment ~ body:", body);
 		const headers = {
 			"Content-Type": "application/json",
 			Accept: "application/json",
@@ -64,9 +63,6 @@ const Order = (props: Props) => {
 		}
 
 		const session: SessionResponse = await response.json();
-
-		console.log({ res: session });
-		console.log({ id: session.data.id });
 
 		stripe
 			?.redirectToCheckout({

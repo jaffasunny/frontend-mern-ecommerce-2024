@@ -10,6 +10,7 @@ import {
 import { DEV_BASE_URL, PROD_BASE_URL } from "@/utils/constant";
 import axios from "axios";
 
+// AUTHENTICATION API'S
 export const LoginAPI: LOGIN_API_TYPES["fnType"] = async (
 	emailOrUsername,
 	password
@@ -147,6 +148,7 @@ export const ResetPassword = async (
 	}
 };
 
+// PRODUCT API'S
 export const GetProductAPI = async (user: TUserType) => {
 	try {
 		const response = await axios.get<TGetProductAPI>(
@@ -270,6 +272,34 @@ export const RemoveItemFromCartApi = async (
 	}
 };
 
+export const CompletelyRemoveItemFromCart = async (
+	user: TUserType,
+	itemId: string,
+	cartItem: string
+) => {
+	try {
+		const response = await axios.get(
+			PROD_BASE_URL + "/carts/removeItem/" + itemId + "/" + cartItem,
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+					Authorization: `Bearer ${user.data.accessToken}`,
+				},
+			}
+		);
+
+		return response.data;
+	} catch (error: any) {
+		if (error.response.status === 401) {
+			const response = await RefreshAccessTokenAPI(user);
+
+			return response;
+		}
+		console.log(error);
+	}
+};
+
 export const ClearCartApi = async (user: TUserType) => {
 	try {
 		const response = await axios.get(PROD_BASE_URL + "/carts/clearCart", {
@@ -292,7 +322,6 @@ export const ClearCartApi = async (user: TUserType) => {
 };
 
 // Order Apis
-
 export const CreateOrderApi = async (
 	user: TUserType,
 	body: { cart: string }
@@ -305,7 +334,6 @@ export const CreateOrderApi = async (
 				Authorization: `Bearer ${user.data.accessToken}`,
 			},
 		});
-		console.log("🚀 ~ response:", response);
 
 		return response.data;
 	} catch (error: any) {

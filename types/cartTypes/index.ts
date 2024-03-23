@@ -84,4 +84,5 @@ export type CartAction = {
 	increaseCartCount: () => void;
 	decreaseCartCount: () => void;
 	setCartCount: (count: number) => void;
+	compeletelyRemoveItem: (itemId: string, cartItemId: string) => Promise<void>;
 };

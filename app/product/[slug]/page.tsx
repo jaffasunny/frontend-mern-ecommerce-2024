@@ -18,7 +18,7 @@ type Props = {};
 const Product = (props: Props) => {
 	const userInfo = useAuthStore((state) => state.user);
 	const AddToCart = useCartStore((state) => state.addToCart);
-	const IncreaseCartCount = useCartStore((state) => state.increaseCartCount);
+	const increaseCartCount = useCartStore((state) => state.increaseCartCount);
 	const storeRefreshAccessToken = useAuthStore(
 		(state) => state.refreshAccessToken
 	);
@@ -265,9 +265,12 @@ const Product = (props: Props) => {
 									<SimpleButton
 										title='Add to cart'
 										buttonStyles='flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded'
-										onClick={() => {
-											AddToCart({ product: product._id, quantity: selected });
-											IncreaseCartCount();
+										onClick={async () => {
+											await AddToCart({
+												product: product._id,
+												quantity: selected,
+											});
+
 											// openModal();
 										}}
 									/>

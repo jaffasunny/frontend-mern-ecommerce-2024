@@ -13,8 +13,6 @@ type Props = {};
 
 const Navbar = (props: Props) => {
 	const logout = useAuthStore((state) => state.logout);
-	const user = useAuthStore((state) => state.user);
-	const cart = useCartStore((state) => state.cart);
 	const getCart = useCartStore((state) => state.getCart);
 	const cartCount = useCartStore((state) => state.cartCount);
 
@@ -193,7 +191,7 @@ const Navbar = (props: Props) => {
 							className='flex items-center font-regular text-sm text-gray-500 hover:text-blue-600 md:my-6 md:ps-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500 relative'
 							href='/cart'>
 							<CartIcon className='text-lg w-4 h-4' />
-							{cartCount >= 0 ? (
+							{cartCount > 0 ? (
 								<span className='absolute top-[-10px] right-[-10px] w-4 h-4 bg-red-300 rounded-full text-xs text-white flex items-center justify-center'>
 									{cartCount}
 								</span>

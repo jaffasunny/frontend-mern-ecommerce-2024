@@ -24,6 +24,14 @@ const Cart = (props: Props) => {
 	const DecreaseCartCount = useCartStore((state) => state.decreaseCartCount);
 	const isLoading = useCartStore((state) => state.loading);
 	const AddToCart = useCartStore((state) => state.addToCart);
+	const CompletelyRemoveItem = useCartStore(
+		(state) => state.compeletelyRemoveItem
+	);
+	const increaseCartCount = useCartStore((state) => state.increaseCartCount);
+	const setCartCount = useCartStore((state) => state.setCartCount);
+	const apiResponse = useCartStore((state) => state.apiResponse) as {
+		items: [];
+	};
 	const SingleItemRemoveFromCart = useCartStore(
 		(state) => state.removeItemFromCart
 	);
@@ -35,7 +43,7 @@ const Cart = (props: Props) => {
 	const AddOrder = useOrderStore((state) => state.addOrder);
 
 	useEffect(() => {
-		if (cart?.data[0].items) {
+		if (cart?.data[0]?.items) {
 			setCartItems(cart?.data[0]?.items);
 			setTotalCartPrice(cart?.data[0]?.totalPrice);
 		}
@@ -76,6 +84,7 @@ const Cart = (props: Props) => {
 
 					// Update the state
 					setCartItems(updatedState);
+
 					setTotalCartPrice((prev) =>
 						Number(Number(prev + updatedItem.product.price).toFixed(2))
 					);
@@ -131,8 +140,8 @@ const Cart = (props: Props) => {
 							)
 						)
 					);
+					DecreaseCartCount();
 				}
-				DecreaseCartCount();
 			}
 		} catch (error) {
 			console.log(error);
@@ -141,10 +150,33 @@ const Cart = (props: Props) => {
 
 	const handleAddOrder = () => {
 		try {
-			console.log("cart?.data[0]._id", cart?.data[0]._id);
 			AddOrder({ cart: cart?.data[0]._id })
 				.then((res) => router.replace("/order"))
 				.catch((err) => console.log({ err }));
+		} catch (error) {
+			console.log({ error });
+		}
+	};
+
+	const handleRemoveItem = (itemId: string, productId: string) => {
+		try {
+			CompletelyRemoveItem(itemId, productId)
+				.then((res) => {
+					let previousCart = cartItems;
+
+					if (previousCart.length > 1) {
+						let updatedCart = previousCart.filter(
+							(item) => item?._id !== productId
+						);
+
+						setCartItems(updatedCart);
+						setCartCount(updatedCart.length);
+					} else {
+						setCartItems([]);
+						setCartCount(0);
+					}
+				})
+				.catch((err) => console.log(err));
 		} catch (error) {
 			console.log({ error });
 		}
@@ -155,7 +187,7 @@ const Cart = (props: Props) => {
 			<div className='container px-5 py-10 mx-auto'>
 				{isLoading ? (
 					<Skeleton />
-				) : cartItems.length > 0 ? (
+				) : cartItems?.length > 0 ? (
 					<>
 						<h1 className='font-integralCF font-bold text-4xl text-black mb-2'>
 							Your Cart
@@ -186,7 +218,13 @@ const Cart = (props: Props) => {
 														</p>
 													</div>
 													<div className='flex flex-col justify-between sm:gap-0 gap-3 items-end h-full'>
-														<button>
+														<button
+															onClick={() =>
+																handleRemoveItem(
+																	cart?.data[0]._id as string,
+																	_id
+																)
+															}>
 															<TrashIcon />
 														</button>
 
